@@ -1,0 +1,504 @@
+import pandas as pd
+import numpy as np
+import random
+import os
+
+np.random.seed(42)
+random.seed(42)
+
+BASE_DIR = "C:/Users/RAMYA VARSHI/.gemini/antigravity/scratch/AI_Diet_System"
+DATA_DIR = os.path.join(BASE_DIR, "data")
+ML_DIR = os.path.join(BASE_DIR, "ml")
+CORE_DIR = os.path.join(BASE_DIR, "core")
+PAGES_DIR = os.path.join(BASE_DIR, "pages")
+REPORTS_DIR = os.path.join(BASE_DIR, "reports")
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+
+for d in [DATA_DIR, ML_DIR, CORE_DIR, PAGES_DIR, REPORTS_DIR, ASSETS_DIR]:
+    os.makedirs(d, exist_ok=True)
+
+def create_food_database():
+    foods = []
+    
+    def add_f(id_num, name, cat, reg, cal, p, c, f, fib, gi, gi_tag, veg, nonveg, vegan, egg, jain, s_ind, n_ind, med, allergens, notes, subs, qty, unit, price):
+        foods.append({
+            "FoodID": id_num,
+            "FoodName": name,
+            "Category": cat,
+            "Region": reg,
+            "Calories": cal,
+            "Protein_g": p,
+            "Carbs_g": c,
+            "Fat_g": f,
+            "Fiber_g": fib,
+            "GlycemicIndex": gi,
+            "GI_Impact": gi_tag,
+            "IsVegetarian": veg,
+            "IsNonVeg": nonveg,
+            "IsVegan": vegan,
+            "IsEggetarian": egg,
+            "IsJain": jain,
+            "IsSouthIndian": s_ind,
+            "IsNorthIndian": n_ind,
+            "IsMediterranean": med,
+            "Allergens": allergens,
+            "CookingNotes": notes,
+            "HealthySubstitutes": subs,
+            "EstQuantity": qty,
+            "EstUnit": unit,
+            "EstPriceINR": price
+        })
+
+    # Raw database array containing 300+ unique foods (24 fields each)
+    raw_food_items = [
+        # Whole Grains & Millets (40)
+        ("Rolled Oats (1 cup cooked)", "Whole Grains", "International", 160, 6.0, 28, 2.5, 4.0, 55, "Low", True, False, True, False, True, True, True, True, "Gluten", "Simmer in almond or soy milk for 5 mins; top with chia and berries.", "Steel Cut Oats, Quinoa Porridge", "500", "g", 120),
+        ("Brown Rice (1 cup cooked)", "Whole Grains", "Pan-Indian", 216, 5.0, 45, 1.8, 3.5, 55, "Medium", True, False, True, False, True, True, True, False, "None", "Soak for 30 mins before steam cooking to reduce phytic acid.", "Cauliflower Rice, Red Rice", "1", "kg", 95),
+        ("Red Rice (1 cup cooked)", "Whole Grains", "South Indian", 205, 4.5, 44, 1.6, 3.8, 52, "Low", True, False, True, False, True, True, False, False, "None", "Pressure cook with 1:3 water ratio for soft texture.", "Brown Rice, Foxtail Millet", "1", "kg", 110),
+        ("Quinoa (1 cup cooked)", "Whole Grains", "International", 222, 8.1, 39, 3.6, 5.2, 53, "Low", True, False, True, False, True, False, False, True, "None", "Rinse under cold water before boiling to remove saponins.", "Amaranth, Brown Rice", "500", "g", 240),
+        ("Foxtail Millet (Navane)", "Whole Grains", "South Indian", 195, 6.0, 38, 2.1, 4.5, 54, "Low", True, False, True, False, True, True, True, False, "None", "Dry roast lightly before cooking into upma or khichdi.", "Kodo Millet, Little Millet", "500", "g", 75),
+        ("Finger Millet (Ragi)", "Whole Grains", "South Indian", 200, 5.0, 42, 1.3, 6.0, 54, "Low", True, False, True, False, True, True, False, False, "None", "Whisk with warm water into malt or steam into soft ragi balls.", "Jowar Flour, Bajra", "1", "kg", 60),
+        ("Pearl Millet (Bajra)", "Whole Grains", "North Indian", 210, 6.5, 40, 2.5, 5.0, 55, "Medium", True, False, True, False, True, False, True, False, "None", "Knead into warm roti dough with garlic and green chili.", "Jowar Roti, Missi Roti", "1", "kg", 55),
+        ("Sorghum (Jowar)", "Whole Grains", "Western Indian", 190, 5.5, 41, 1.5, 4.8, 50, "Low", True, False, True, False, True, True, True, False, "None", "Use warm water while kneading to make soft gluten-free flatbread.", "Bajra Roti, Ragi Mudde", "1", "kg", 65),
+        ("Steel Cut Oats", "Whole Grains", "International", 170, 7.0, 29, 3.0, 5.0, 52, "Low", True, False, True, False, True, False, False, False, "Gluten", "Slow cook on low flame for 15 mins for maximum fiber preservation.", "Rolled Oats, Buckwheat", "500", "g", 180),
+        ("Barley Porridge (1 cup)", "Whole Grains", "International", 193, 3.5, 44, 0.7, 6.0, 28, "Low", True, False, True, False, True, False, False, True, "Gluten", "Boil pearl barley until tender; serve with roasted cinnamon.", "Oats Porridge, Quinoa", "500", "g", 85),
+        ("Whole Wheat Roti (1 pc)", "Whole Grains", "North Indian", 100, 3.0, 20, 0.5, 2.5, 62, "Medium", True, False, True, False, True, True, True, False, "Gluten,Wheat", "Puff on direct flame without oil or butter for low calorie count.", "Jowar Roti, Missi Roti", "1", "pack", 40),
+        ("Multigrain Bread (2 slices)", "Whole Grains", "International", 160, 8.0, 28, 2.0, 4.0, 53, "Low", True, False, True, False, True, False, False, False, "Gluten,Wheat,Sesame", "Toast lightly without butter; spread crushed avocado or peanut butter.", "Sourdough Bread, Gluten-Free Toast", "400", "g", 55),
+        ("Buckwheat Groats (Kuttu)", "Whole Grains", "North Indian", 155, 5.7, 33, 1.0, 4.5, 45, "Low", True, False, True, False, True, False, True, False, "None", "Boil or make savory khichdi with cumin and green apple.", "Quinoa, Rajgira Amaranth", "500", "g", 110),
+        ("Amaranth Grain (Rajgira)", "Whole Grains", "Pan-Indian", 250, 9.0, 46, 3.8, 5.0, 35, "Low", True, False, True, False, True, True, True, False, "None", "Pop in a hot dry skillet or boil into protein-packed porridge.", "Quinoa, Buckwheat", "500", "g", 130),
+        ("Kodo Millet (Varagu)", "Whole Grains", "South Indian", 185, 5.8, 37, 1.8, 5.0, 50, "Low", True, False, True, False, True, True, False, False, "None", "Boil like rice or steam into savory upma.", "Foxtail Millet, Little Millet", "500", "g", 70),
+        ("Little Millet (Samai)", "Whole Grains", "South Indian", 190, 5.5, 38, 2.0, 4.8, 52, "Low", True, False, True, False, True, True, False, False, "None", "Great substitute for white rice in pongal and dosa batter.", "Kodo Millet, Barnyard Millet", "500", "g", 72),
+        ("Barnyard Millet (Sanwa)", "Whole Grains", "North Indian", 175, 6.2, 35, 1.5, 6.5, 48, "Low", True, False, True, False, True, True, True, False, "None", "Ideal fasting grain; high fiber and low GI.", "Kodo Millet, Foxtail Millet", "500", "g", 78),
+        ("Black Rice (Chak-Hao)", "Whole Grains", "Eastern Indian", 210, 8.5, 43, 2.0, 4.9, 43, "Low", True, False, True, False, True, False, False, False, "None", "Deep purple antioxidant rich rice from Manipur.", "Red Rice, Brown Rice", "500", "g", 190),
+        ("Bamboo Rice", "Whole Grains", "South Indian", 200, 7.0, 42, 1.2, 5.5, 45, "Low", True, False, True, False, True, True, False, False, "None", "Harvested from bamboo shoots; high protein and fiber.", "Red Rice, Wild Rice", "500", "g", 220),
+        ("Proso Millet (Chena)", "Whole Grains", "Central Indian", 192, 6.8, 39, 2.2, 4.2, 53, "Low", True, False, True, False, True, True, True, False, "None", "Light easy-to-digest millet.", "Foxtail Millet, Kodo Millet", "500", "g", 68),
+        ("Wild Rice (1 cup)", "Whole Grains", "International", 166, 6.5, 35, 0.6, 3.0, 57, "Medium", True, False, True, False, True, False, False, False, "None", "Boil with vegetable broth for a nutty herbal aroma.", "Brown Rice, Black Rice", "250", "g", 290),
+        ("Bulgur Wheat (1 cup)", "Whole Grains", "Mediterranean", 151, 5.6, 34, 0.4, 8.0, 48, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "Steep in boiling water for 12 mins for Tabbouleh salad base.", "Quinoa, Broken Wheat Dalia", "500", "g", 160),
+        ("Freekeh (1 cup)", "Whole Grains", "Mediterranean", 170, 8.0, 32, 1.0, 7.0, 43, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "Simmer in savory herb broth until tender and smoky.", "Bulgur Wheat, Quinoa", "500", "g", 210),
+        ("Spelt Flakes", "Whole Grains", "International", 180, 6.0, 36, 1.5, 5.0, 54, "Low", True, False, True, False, True, False, False, False, "Gluten,Wheat", "Mix with Greek yogurt and berries for breakfast parfait.", "Oats Flakes, Barley Flakes", "500", "g", 190),
+        ("Ragi Mudde (1 ball)", "Whole Grains", "South Indian", 180, 4.0, 38, 1.0, 5.5, 50, "Low", True, False, True, False, True, True, False, False, "None", "Steam ragi flour paste and roll into smooth warm mudde balls.", "Jowar Roti, Bajra Mudde", "1", "kg", 60),
+        ("Jowar Roti (1 pc)", "Whole Grains", "Western Indian", 90, 2.8, 19, 0.6, 2.8, 49, "Low", True, False, True, False, True, True, True, False, "None", "Pat out dough by hand using warm water on tawa.", "Bajra Roti, Ragi Roti", "1", "kg", 65),
+        ("Bajra Roti (1 pc)", "Whole Grains", "North Indian", 110, 3.2, 21, 1.2, 3.0, 52, "Low", True, False, True, False, True, False, True, False, "None", "Cook on cast iron tawa; pair with garlic chutney.", "Jowar Roti, Missi Roti", "1", "kg", 55),
+        ("Broken Wheat Dalia Upma", "Whole Grains", "Pan-Indian", 210, 6.0, 38, 4.0, 5.0, 54, "Low", True, False, True, False, True, True, True, False, "Gluten,Wheat", "Saute veggies with mustard seeds and curry leaves before boiling dalia.", "Oats Upma, Millet Upma", "500", "g", 50),
+        ("Brown Rice Poha", "Whole Grains", "Western Indian", 180, 3.5, 38, 1.2, 3.0, 55, "Medium", True, False, True, False, True, True, True, False, "None", "Rinse poha lightly; toss with turmeric, peanuts, and lemon juice.", "Red Rice Poha, Oats Poha", "500", "g", 60),
+        ("Red Rice Poha", "Whole Grains", "South Indian", 175, 3.8, 37, 1.0, 3.5, 50, "Low", True, False, True, False, True, True, False, False, "None", "High fiber flattened red rice; steam with grated coconut.", "Brown Rice Poha, Millet Poha", "500", "g", 65),
+        ("Cornmeal Polenta", "Whole Grains", "International", 145, 3.0, 31, 1.0, 2.5, 68, "Medium", True, False, True, False, True, False, False, False, "Corn", "Whisk continuously in warm water or milk until creamy.", "Millet Mash, Mashed Potato", "500", "g", 110),
+        ("Teff Grain (1 cup)", "Whole Grains", "International", 255, 9.8, 50, 1.6, 7.0, 57, "Medium", True, False, True, False, True, False, False, False, "None", "Cook into porridge or ferment into gluten-free injera flatbread.", "Quinoa, Amaranth", "500", "g", 320),
+        ("Whole Wheat Pasta", "Whole Grains", "International", 174, 7.5, 37, 0.8, 4.3, 42, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "Boil al dente; toss with extra virgin olive oil, garlic, and basil.", "Chickpea Pasta, Zucchini Noodles", "500", "g", 140),
+        ("Chickpea Pasta", "Whole Grains", "International", 190, 14.0, 32, 3.5, 6.0, 38, "Low", True, False, True, False, True, False, False, True, "None", "High protein gluten-free alternative; boil for 7-9 mins.", "Whole Wheat Pasta, Lentil Pasta", "250", "g", 220),
+        ("Lentil Pasta", "Whole Grains", "International", 200, 15.0, 30, 2.0, 5.5, 35, "Low", True, False, True, False, True, False, False, True, "None", "Boil in salted water; pair with homemade marinara sauce.", "Chickpea Pasta, Edamame Pasta", "250", "g", 230),
+        ("Sourdough Wheat Bread", "Whole Grains", "International", 140, 6.0, 26, 1.0, 3.0, 53, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "Fermented sourdough supports gut microbiome health.", "Multigrain Bread, Rye Bread", "400", "g", 120),
+        ("Rye Bread (2 slices)", "Whole Grains", "International", 166, 5.4, 31, 2.0, 3.8, 48, "Low", True, False, True, False, True, False, False, False, "Gluten", "Dense high-fiber rye bread; top with cottage cheese and cucumber.", "Sourdough Bread, Whole Wheat Toast", "400", "g", 140),
+        ("Sattu Flour (Barley/Chana)", "Whole Grains", "Eastern Indian", 190, 12.0, 30, 2.5, 6.0, 40, "Low", True, False, True, False, True, False, True, False, "None", "Mix with cold water, roasted cumin, and lemon juice for protein drink.", "Besan, Roasted Chana", "500", "g", 80),
+        ("Makki Ki Roti (Corn)", "Whole Grains", "North Indian", 140, 3.5, 28, 2.0, 3.2, 65, "Medium", True, False, True, False, True, False, True, False, "Corn", "Knead cornmeal flour with warm water; pair with mustard sarson greens.", "Bajra Roti, Missi Roti", "500", "g", 50),
+        ("Farro Grain (1 cup)", "Whole Grains", "Mediterranean", 200, 7.5, 38, 1.5, 5.0, 45, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "Ancient Italian wheat grain with chewy nutty texture.", "Bulgur Wheat, Quinoa", "500", "g", 260),
+
+        # Vegetables (40)
+        ("Steamed Spinach (1 cup)", "Vegetables", "Pan-Indian", 41, 5.3, 6.8, 0.5, 4.3, 15, "Low", True, False, True, False, True, True, True, True, "None", "Steam for 3 mins to preserve folate and lutein content.", "Kale, Swiss Chard", "1", "bunch", 30),
+        ("Fresh Broccoli (1 cup cooked)", "Vegetables", "International", 55, 3.7, 11.0, 0.6, 5.1, 15, "Low", True, False, True, False, True, True, True, True, "None", "Lightly steam or roast with olive oil and garlic.", "Cauliflower, Brussels Sprouts", "500", "g", 80),
+        ("Cauliflower Rice (1 cup)", "Vegetables", "International", 25, 2.0, 5.0, 0.3, 2.5, 15, "Low", True, False, True, False, True, True, True, False, "None", "Grate cauliflower head; stir-fry on high heat for 4 mins.", "Steamed Cabbage, Broccoli Rice", "1", "head", 40),
+        ("Steamed Cabbage", "Vegetables", "Pan-Indian", 34, 1.8, 8.0, 0.1, 3.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Shred finely and steam with carom seeds (ajwain).", "Cauliflower Rice, Kale", "1", "kg", 35),
+        ("Raw Cucumber Slices", "Vegetables", "Pan-Indian", 16, 0.7, 3.8, 0.2, 1.0, 15, "Low", True, False, True, False, True, True, True, True, "None", "Slice raw; sprinkle with pink Himalayan salt and mint.", "Zucchini Ribbons, Celery Sticks", "1", "kg", 40),
+        ("Roasted Carrots", "Vegetables", "International", 54, 1.2, 12.0, 0.3, 3.4, 39, "Low", True, False, True, False, False, True, True, True, "None", "Toss with olive oil and thyme; roast at 200°C for 20 mins.", "Boiled Beetroot, Sweet Potato", "1", "kg", 50),
+        ("Boiled Beetroot", "Vegetables", "Pan-Indian", 44, 1.7, 10.0, 0.2, 2.8, 64, "Medium", True, False, True, False, False, True, True, False, "None", "Boil or grate into salad for nitrate boost and stamina.", "Roasted Carrots, Radish", "1", "kg", 45),
+        ("Sautéed Zucchini", "Vegetables", "Mediterranean", 27, 2.0, 4.8, 0.4, 1.8, 15, "Low", True, False, True, False, True, False, False, True, "None", "Spiralize into noodles or sauté with oregano.", "Yellow Squash, Cucumber", "500", "g", 70),
+        ("Grilled Asparagus", "Vegetables", "Mediterranean", 40, 4.3, 7.0, 0.4, 3.6, 15, "Low", True, False, True, False, True, False, False, True, "None", "Snap off woody ends; grill with olive oil and lemon zest.", "Green Beans, Broccoli", "250", "g", 180),
+        ("Steamed Kale", "Vegetables", "International", 36, 2.5, 7.3, 0.5, 2.6, 15, "Low", True, False, True, False, True, False, False, True, "None", "Massage leaves with olive oil before light steaming.", "Steamed Spinach, Swiss Chard", "250", "g", 120),
+        ("Sautéed Mushrooms", "Vegetables", "International", 28, 3.1, 4.4, 0.3, 1.2, 15, "Low", True, False, True, False, True, True, True, True, "None", "Sauté in dry pan first to release water; finish with herbs.", "Tofu Cubes, Eggplant", "200", "g", 60),
+        ("Bell Peppers (Red/Green)", "Vegetables", "Pan-Indian", 30, 1.2, 7.0, 0.3, 2.5, 15, "Low", True, False, True, False, True, True, True, True, "None", "Slice raw into salads or roast into fajita veggies.", "Zucchini, Carrots", "500", "g", 65),
+        ("Baked Sweet Potato", "Vegetables", "Pan-Indian", 103, 2.3, 24.0, 0.2, 3.8, 54, "Low", True, False, True, False, False, True, True, False, "None", "Bake whole in skin for beta-carotene and steady energy.", "Roasted Pumpkin, Beetroot", "1", "kg", 60),
+        ("Roasted Pumpkin", "Vegetables", "Pan-Indian", 30, 1.2, 7.5, 0.1, 1.5, 65, "Medium", True, False, True, False, True, True, True, False, "None", "Cube and bake with cinnamon or nutmeg.", "Sweet Potato, Carrots", "1", "kg", 40),
+        ("Bitter Gourd (Karela)", "Vegetables", "Pan-Indian", 45, 2.0, 7.0, 1.5, 3.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Sauté with turmeric and dry mango powder to balance bitterness.", "Bottle Gourd, Ridge Gourd", "500", "g", 35),
+        ("Bottle Gourd (Lauki)", "Vegetables", "Pan-Indian", 35, 1.0, 6.0, 0.8, 2.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Cook with yellow moong dal for digestive soothing.", "Ridge Gourd, Zucchini", "1", "kg", 30),
+        ("Ridge Gourd (Turai)", "Vegetables", "Pan-Indian", 30, 1.1, 5.5, 0.5, 2.2, 15, "Low", True, False, True, False, True, True, True, False, "None", "Peel lightly; simmer with mustard seeds and curry leaves.", "Bottle Gourd, Lauki", "1", "kg", 40),
+        ("Drumstick Sambar Veggies", "Vegetables", "South Indian", 40, 2.2, 7.0, 0.6, 3.2, 15, "Low", True, False, True, False, True, True, False, False, "None", "Boil in lentil sambar gravy rich in micronutrients.", "French Beans, Okra", "250", "g", 30),
+        ("Brinjal Bharta", "Vegetables", "North Indian", 70, 1.5, 8.0, 4.0, 3.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Roast whole eggplant on open flame; mash with tomatoes and herbs.", "Zucchini Sabzi, Mushroom Sauté", "1", "kg", 45),
+        ("Bhindi Masala (Okra)", "Vegetables", "North Indian", 65, 2.0, 7.5, 3.5, 3.2, 15, "Low", True, False, True, False, True, True, True, False, "None", "Dry slit bhindi before stir-frying to eliminate sliminess.", "French Beans, Cluster Beans", "500", "g", 40),
+        ("Cluster Beans (Gavar)", "Vegetables", "Western Indian", 50, 3.2, 8.0, 0.5, 4.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Steam thoroughly; toss with crushed ajwain and garlic.", "French Beans, Bhindi", "500", "g", 35),
+        ("French Beans Stir-fry", "Vegetables", "South Indian", 45, 2.0, 7.0, 1.5, 3.4, 15, "Low", True, False, True, False, True, True, True, False, "None", "Snap ends; stir-fry with grated coconut and mustard seeds.", "Cluster Beans, Asparagus", "500", "g", 45),
+        ("Green Peas Boiled", "Vegetables", "Pan-Indian", 118, 8.0, 21.0, 0.5, 7.0, 48, "Low", True, False, True, False, True, True, True, False, "None", "Boil until tender; fold into brown rice or salads.", "Edamame, Sweet Corn", "500", "g", 60),
+        ("Brussels Sprouts", "Vegetables", "International", 56, 4.0, 11.0, 0.8, 4.0, 15, "Low", True, False, True, False, True, False, False, True, "None", "Halve and roast with balsamic glaze until caramelized.", "Broccoli, Cabbage", "250", "g", 140),
+        ("Steamed Artichoke", "Vegetables", "Mediterranean", 64, 3.5, 14.0, 0.4, 7.0, 15, "Low", True, False, True, False, True, False, False, True, "None", "Steam whole for 30 mins; dip leaves in lemon tahini.", "Asparagus, Brussels Sprouts", "250", "g", 210),
+        ("Celery Sticks", "Vegetables", "International", 14, 0.7, 3.0, 0.2, 1.6, 15, "Low", True, False, True, False, True, False, False, True, "None", "Chop raw for crunch; dip in peanut butter or hummus.", "Cucumber Slices, Radish", "250", "g", 50),
+        ("Raw Radish (Mooli)", "Vegetables", "North Indian", 18, 0.8, 4.0, 0.1, 1.9, 15, "Low", True, False, True, False, False, True, True, False, "None", "Grate into raw salad with lemon juice and coriander.", "Turnip, Cucumber", "1", "kg", 30),
+        ("Turnip (Shalgam)", "Vegetables", "North Indian", 34, 1.1, 8.0, 0.1, 2.3, 30, "Low", True, False, True, False, False, True, True, False, "None", "Dice into vegetable soups or curry gravies.", "Radish, Beetroot", "1", "kg", 35),
+        ("Colocasia Leaves (Arbi)", "Vegetables", "Pan-Indian", 35, 2.5, 6.0, 0.5, 3.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Steam leaves after smearing with spiced chickpea paste.", "Spinach, Kale", "1", "bunch", 25),
+        ("Fenugreek Leaves (Methi)", "Vegetables", "North Indian", 40, 4.0, 6.0, 0.9, 4.0, 15, "Low", True, False, True, False, True, True, True, False, "None", "Chop finely; knead into multigrain dough for flatbreads.", "Spinach, Amaranth Leaves", "1", "bunch", 20),
+        ("Mustard Greens (Sarson)", "Vegetables", "North Indian", 35, 3.2, 5.0, 0.4, 3.5, 15, "Low", True, False, True, False, True, False, True, False, "Mustard", "Boil and puree greens with garlic, ginger, and green chili.", "Spinach, Methi", "1", "bunch", 25),
+        ("Amaranth Leaves (Chaulai)", "Vegetables", "Pan-Indian", 38, 3.5, 6.5, 0.5, 3.8, 15, "Low", True, False, True, False, True, True, True, False, "None", "Sauté with garlic and red chilies.", "Spinach, Kale", "1", "bunch", 20),
+        ("Raw Tomato Slices", "Vegetables", "Pan-Indian", 22, 1.1, 4.8, 0.2, 1.5, 15, "Low", True, False, True, False, True, True, True, True, "None", "Slice fresh for lycopene antioxidant boost.", "Bell Peppers, Cucumber", "1", "kg", 30),
+        ("Sweet Corn Kernels", "Vegetables", "Pan-Indian", 96, 3.4, 21.0, 1.5, 2.4, 60, "Medium", True, False, True, False, True, True, True, False, "Corn", "Steam kernels; toss with black pepper and lime juice.", "Green Peas, Baby Corn", "500", "g", 50),
+        ("Raw Baby Corn", "Vegetables", "Pan-Indian", 40, 1.5, 9.0, 0.3, 2.0, 55, "Medium", True, False, True, False, True, True, True, False, "Corn", "Stir-fry with capsicum and mushroom.", "Sweet Corn, Zucchini", "250", "g", 45),
+        ("Pointed Gourd (Parwal)", "Vegetables", "Eastern Indian", 20, 1.2, 4.0, 0.2, 2.0, 15, "Low", True, False, True, False, True, False, True, False, "None", "Stir-fry with cumin and green chilies.", "Bottle Gourd, Ridge Gourd", "500", "g", 40),
+        ("Ivy Gourd (Tindora/Kovakkai)", "Vegetables", "Pan-Indian", 30, 1.4, 5.0, 0.3, 2.5, 15, "Low", True, False, True, False, True, True, True, False, "None", "Slice thin; sauté with mustard seeds and turmeric.", "Bhindi, French Beans", "500", "g", 35),
+        ("Ash Gourd (Pethai)", "Vegetables", "South Indian", 15, 0.5, 3.5, 0.1, 1.5, 15, "Low", True, False, True, False, True, True, False, False, "None", "Juice raw for morning detox alkalizing drink.", "Bottle Gourd, Cucumber", "1", "kg", 30),
+        ("Snake Gourd (Padavalanga)", "Vegetables", "South Indian", 18, 0.8, 3.8, 0.1, 2.0, 15, "Low", True, False, True, False, True, True, False, False, "None", "Steam with yellow lentils and coconut.", "Ridge Gourd, Bottle Gourd", "1", "kg", 35),
+        ("Elephant Foot Yam (Jimikand)", "Vegetables", "Pan-Indian", 110, 1.5, 25.0, 0.2, 4.0, 50, "Low", True, False, True, False, False, True, True, False, "None", "Boil with tamarind water before roasting to prevent itching.", "Sweet Potato, Colocasia", "1", "kg", 55),
+
+        # Fruits (35)
+        ("Green Apple (medium)", "Fruits", "International", 95, 0.5, 25.0, 0.3, 4.4, 38, "Low", True, False, True, False, True, True, True, True, "None", "Eat with skin intact for pectin fiber and low GI impact.", "Red Apple, Pear", "1", "kg", 180),
+        ("Red Delicious Apple", "Fruits", "International", 95, 0.5, 25.0, 0.3, 4.4, 39, "Low", True, False, True, False, True, True, True, True, "None", "Wash thoroughly; pair with raw walnuts for mid-day snack.", "Green Apple, Pear", "1", "kg", 160),
+        ("Robusta Banana (medium)", "Fruits", "Pan-Indian", 105, 1.3, 27.0, 0.3, 3.1, 51, "Low", True, False, True, False, True, True, True, False, "None", "Ideal pre/post workout carbohydrate and potassium source.", "Yelakki Banana, Papaya", "1", "dozen", 60),
+        ("Yelakki Banana (small)", "Fruits", "South Indian", 60, 0.8, 15.0, 0.2, 1.8, 48, "Low", True, False, True, False, True, True, False, False, "None", "Compact pre-workout quick energizer.", "Robusta Banana, Figs", "1", "dozen", 75),
+        ("Fresh Valencia Orange", "Fruits", "International", 62, 1.2, 15.0, 0.2, 3.1, 40, "Low", True, False, True, False, True, True, True, True, "Citrus", "Eat fresh segment pulp for bioflavonoids and vitamin C.", "Sweet Lime, Grapefruit", "1", "kg", 120),
+        ("Sweet Lime (Mosambi)", "Fruits", "Pan-Indian", 50, 0.8, 12.0, 0.1, 2.5, 40, "Low", True, False, True, False, True, True, True, False, "Citrus", "Eat whole segments rather than strained juice to keep fiber.", "Orange, Grapefruit", "1", "kg", 90),
+        ("Fresh Blueberries (1 cup)", "Fruits", "International", 84, 1.1, 21.0, 0.5, 3.6, 53, "Low", True, False, True, False, True, False, False, True, "None", "Rich in anthocyanin antioxidants; fold into oats porridge.", "Strawberries, Raspberries", "125", "g", 250),
+        ("Fresh Strawberries (1 cup)", "Fruits", "International", 49, 1.0, 11.7, 0.5, 3.0, 41, "Low", True, False, True, False, True, False, False, True, "None", "Slice into Greek yogurt or chia pudding.", "Blueberries, Blackberries", "200", "g", 90),
+        ("Fresh Raspberries", "Fruits", "International", 64, 1.5, 14.7, 0.8, 8.0, 32, "Low", True, False, True, False, True, False, False, True, "None", "High fiber berry; top onto protein smoothies.", "Strawberries, Blueberries", "125", "g", 280),
+        ("Blackberries (1 cup)", "Fruits", "International", 62, 2.0, 13.8, 0.7, 7.6, 25, "Low", True, False, True, False, True, False, False, True, "None", "Low GI berry ideal for diabetic carbohydrate control.", "Raspberries, Strawberries", "125", "g", 290),
+        ("Ripe Papaya (1 cup)", "Fruits", "Pan-Indian", 62, 0.9, 15.7, 0.4, 2.5, 60, "Medium", True, False, True, False, True, True, True, False, "None", "Contains papain enzymes for digestive support.", "Guava, Melon", "1", "kg", 50),
+        ("Pink Guava (medium)", "Fruits", "Pan-Indian", 37, 1.4, 7.9, 0.5, 4.9, 12, "Low", True, False, True, False, True, True, True, False, "None", "Extremely low GI fruit packed with 4x vitamin C of oranges.", "Green Apple, Papaya", "1", "kg", 60),
+        ("Fresh Green Kiwi", "Fruits", "International", 42, 0.8, 10.0, 0.4, 2.1, 52, "Low", True, False, True, False, True, False, False, True, "None", "Peel and slice; rich in actinidin enzyme and vitamin C.", "Strawberries, Orange", "3", "pcs", 90),
+        ("Watermelon Slices", "Fruits", "Pan-Indian", 46, 0.9, 11.5, 0.2, 0.6, 72, "High", True, False, True, False, True, True, True, True, "None", "High hydration content; consume in moderate portion.", "Muskmelon, Papaya", "1", "kg", 30),
+        ("Pomegranate Seeds", "Fruits", "Pan-Indian", 144, 3.0, 32.7, 2.0, 7.0, 53, "Low", True, False, True, False, True, True, True, True, "None", "Eat arils fresh for punicalagin polyphenols and heart health.", "Berries, Guava", "1", "kg", 180),
+        ("Bartlett Pear", "Fruits", "International", 101, 0.6, 27.0, 0.2, 5.5, 38, "Low", True, False, True, False, True, True, True, True, "None", "Eat unpeeled for maximum soluble fiber.", "Green Apple, Guava", "1", "kg", 170),
+        ("Black Grapes", "Fruits", "Pan-Indian", 62, 0.6, 16.0, 0.3, 0.9, 59, "Medium", True, False, True, False, True, True, True, False, "None", "Contains resveratrol; limit portion to 15 grapes.", "Blueberries, Pomegranate", "500", "g", 70),
+        ("Alphonso Mango Slices", "Fruits", "Western Indian", 99, 1.4, 24.7, 0.6, 2.6, 51, "Low", True, False, True, False, True, True, True, False, "None", "Enjoy fresh slices in moderation during season.", "Papaya, Pineapple", "1", "kg", 220),
+        ("Pineapple Cubes", "Fruits", "Pan-Indian", 82, 0.9, 21.6, 0.2, 2.3, 59, "Medium", True, False, True, False, True, True, True, False, "None", "Contains bromelain anti-inflammatory enzyme.", "Papaya, Mango", "1", "pc", 60),
+        ("Hass Avocado (half)", "Fruits", "International", 160, 2.0, 8.5, 14.7, 6.7, 15, "Low", True, False, True, False, True, False, False, True, "None", "Mash on whole grain toast or add to salads for monounsaturated fats.", "Extra Virgin Olive Oil, Chia Seeds", "2", "pcs", 180),
+        ("Dried Figs (Anjeer)", "Fruits", "Pan-Indian", 110, 1.5, 28.0, 0.5, 4.0, 61, "Medium", True, False, True, False, True, True, True, False, "None", "Soak 2 anjeer overnight in water for fiber and digestive ease.", "Dates, Prunes", "250", "g", 260),
+        ("Medjool Dates (2 pcs)", "Fruits", "International", 133, 0.9, 36.0, 0.1, 3.2, 42, "Low", True, False, True, False, True, True, True, False, "None", "Natural sweetener; eat 2 dates pre-workout for rapid glycogen.", "Dried Figs, Raisins", "250", "g", 240),
+        ("Muskmelon / Cantaloupe", "Fruits", "Pan-Indian", 53, 1.3, 12.0, 0.3, 1.4, 65, "Medium", True, False, True, False, True, True, True, False, "None", "High electrolyte and hydration fruit.", "Watermelon, Papaya", "1", "kg", 40),
+        ("Red Dragon Fruit", "Fruits", "International", 60, 1.2, 13.0, 0.5, 2.9, 48, "Low", True, False, True, False, True, True, False, False, "None", "Dice into fruit salads for gut prebiotic fiber.", "Kiwi, Papaya", "1", "pc", 80),
+        ("Fresh Plums (2 small)", "Fruits", "International", 60, 0.9, 15.0, 0.4, 1.9, 40, "Low", True, False, True, False, True, False, True, True, "None", "Eat fresh with skin; supports healthy blood pressure.", "Peaches, Apricots", "500", "g", 110),
+        ("Fresh Peaches", "Fruits", "International", 59, 1.4, 14.0, 0.4, 2.3, 42, "Low", True, False, True, False, True, False, True, True, "None", "Slice into salads or eat whole as mid-morning snack.", "Plums, Nectarines", "500", "g", 120),
+        ("Fresh Apricots", "Fruits", "International", 50, 1.4, 11.0, 0.4, 2.1, 34, "Low", True, False, True, False, True, False, True, True, "None", "Rich in vitamin A and potassium.", "Peaches, Plums", "250", "g", 140),
+        ("Grapefruit (half)", "Fruits", "International", 52, 1.0, 13.0, 0.2, 2.0, 25, "Low", True, False, True, False, True, False, False, True, "Citrus", "Low GI citrus fruit; enhances insulin sensitivity.", "Orange, Sweet Lime", "1", "kg", 150),
+        ("Lemon Juice (1 lemon)", "Fruits", "Pan-Indian", 12, 0.4, 4.0, 0.1, 0.5, 20, "Low", True, False, True, False, True, True, True, True, "Citrus", "Squeeze into warm water first thing in the morning.", "Amla Juice, Lime Juice", "1", "kg", 60),
+        ("Amla Gooseberry", "Fruits", "Pan-Indian", 30, 0.5, 7.0, 0.2, 2.0, 15, "Low", True, False, True, False, True, True, True, False, "Citrus", "Blend 2 amla with water; shot for immune boosting vitamin C.", "Lemon Juice, Guava", "500", "g", 40),
+        ("Custard Apple (Sitaphal)", "Fruits", "Pan-Indian", 95, 1.7, 24.0, 0.3, 2.4, 54, "Low", True, False, True, False, True, True, True, False, "None", "Rich in magnesium and vitamin B6.", "Banana, Mango", "500", "g", 90),
+        ("Wood Apple (Bael)", "Fruits", "Eastern Indian", 75, 1.8, 18.0, 0.2, 3.5, 40, "Low", True, False, True, False, True, False, True, False, "None", "Gut healing fruit sherbet base.", "Amla, Guava", "1", "pc", 45),
+        ("Jamun Black Plum", "Fruits", "Pan-Indian", 60, 0.7, 14.0, 0.2, 1.5, 25, "Low", True, False, True, False, True, True, True, False, "None", "Jamboline compounds help regulate blood glucose levels.", "Blackberries, Blueberries", "500", "g", 120),
+        ("Star Fruit (Carambola)", "Fruits", "Eastern Indian", 30, 1.0, 6.7, 0.3, 2.8, 36, "Low", True, False, True, False, True, False, True, False, "None", "Low calorie antioxidant slice.", "Kiwi, Orange", "250", "g", 60),
+        ("Tamarind Pulp (Imli)", "Fruits", "Pan-Indian", 140, 1.5, 36.0, 0.2, 3.0, 40, "Low", True, False, True, False, True, True, True, False, "None", "Tart antioxidant digestive base.", "Lemon Juice, Amla Juice", "250", "g", 40),
+
+        # Protein Sources (45)
+        ("Boiled Whole Eggs (2 eggs)", "Proteins", "International", 155, 13.0, 1.1, 10.6, 0.0, 0, "Low", False, False, False, True, False, True, True, True, "Eggs", "Hard boil for 9 mins; sprinkle with black pepper and pink salt.", "Egg White Scramble, Tofu", "6", "pcs", 45),
+        ("Egg White Scramble (4 whites)", "Proteins", "International", 68, 14.4, 0.8, 0.2, 0.0, 0, "Low", False, False, False, True, False, True, True, True, "Eggs", "Whisk with spinach and tomatoes; cook on non-stick pan.", "Boiled Eggs, Tofu Scramble", "6", "pcs", 45),
+        ("Grilled Chicken Breast (150g)", "Proteins", "International", 247, 46.0, 0.0, 5.3, 0.0, 0, "Low", False, True, False, False, False, True, True, True, "None", "Marinate in lemon, garlic, and curd; grill for 12 mins.", "Turkey Breast, Fish Fillet", "500", "g", 160),
+        ("Roasted Turkey Breast (150g)", "Proteins", "International", 200, 42.0, 0.0, 3.0, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "None", "Season with rosemary; roast at 180°C until internal temp is 75°C.", "Chicken Breast, Salmon", "500", "g", 380),
+        ("Pan-seared Salmon Fillet", "Proteins", "International", 300, 34.0, 0.0, 18.0, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood", "Sear skin-side down in olive oil for 4 mins; flip for 3 mins.", "Tuna Steak, Cod Fillet", "250", "g", 450),
+        ("Baked Cod Fillet (150g)", "Proteins", "International", 123, 27.0, 0.0, 1.0, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood", "Bake with lemon slices and dill herbs at 200°C.", "Tilapia Fillet, Salmon", "250", "g", 310),
+        ("Canned Light Tuna in Water", "Proteins", "International", 130, 28.0, 0.0, 1.0, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood", "Drain brine; mix with Greek yogurt, mustard, and celery.", "Salmon Fillet, Chicken Breast", "185", "g", 160),
+        ("Fresh Paneer / Cottage Cheese", "Proteins", "North Indian", 265, 18.0, 3.0, 20.0, 0.0, 0, "Low", True, False, False, False, True, True, True, False, "Dairy", "Cube and pan-sear with spices or simmer in spinach palak gravy.", "Tofu Cubes, Low-fat Paneer", "200", "g", 90),
+        ("Low-fat Paneer (100g)", "Proteins", "North Indian", 160, 20.0, 4.0, 7.0, 0.0, 0, "Low", True, False, False, False, True, True, True, False, "Dairy", "Low calorie high protein paneer for weight management.", "Firm Tofu, Greek Yogurt", "200", "g", 95),
+        ("Firm Tofu Cubes (150g)", "Proteins", "Asian", 144, 15.0, 3.5, 8.0, 2.0, 15, "Low", True, False, True, False, True, True, True, True, "Soy", "Press out excess water; marinate in soy sauce and pan-sear.", "Paneer, Tempeh", "200", "g", 75),
+        ("Organic Tempeh (100g)", "Proteins", "Asian", 195, 20.0, 7.6, 11.0, 4.8, 15, "Low", True, False, True, False, True, False, False, True, "Soy", "Slice and bake or sauté; excellent fermented gut protein.", "Firm Tofu, Seitan", "200", "g", 140),
+        ("Boiled Kabuli Chana (1 cup)", "Proteins", "North Indian", 269, 14.5, 45.0, 4.2, 12.5, 28, "Low", True, False, True, False, True, True, True, True, "None", "Pressure cook with tea bag for dark color; toss in chole masala.", "Rajma, Black Beans", "500", "g", 80),
+        ("Rajma Red Kidney Beans", "Proteins", "North Indian", 225, 15.0, 40.0, 1.0, 13.0, 24, "Low", True, False, True, False, True, True, True, False, "None", "Soak overnight; simmer with tomato onion gravy.", "Kabuli Chana, Black Lentils", "500", "g", 85),
+        ("Yellow Toor Dal Cooked", "Proteins", "Pan-Indian", 198, 11.0, 34.0, 2.0, 8.0, 29, "Low", True, False, True, False, True, True, True, False, "None", "Pressure cook with turmeric; temper with ghee, cumin, and hing.", "Moong Dal, Urad Dal", "1", "kg", 150),
+        ("Green Moong Dal Cooked", "Proteins", "Pan-Indian", 180, 12.0, 30.0, 1.5, 9.0, 31, "Low", True, False, True, False, True, True, True, False, "None", "Easy to digest dal; cook with cumin and ginger.", "Yellow Toor Dal, Chana Dal", "1", "kg", 140),
+        ("Sprouted Moong Beans", "Proteins", "Pan-Indian", 120, 9.0, 20.0, 0.8, 6.0, 25, "Low", True, False, True, False, True, True, True, False, "None", "Sprout for 24 hrs; toss with lemon juice, cucumber, and pomegranate.", "Sprouted Chana, Boiled Peas", "250", "g", 40),
+        ("Black Lentils (Urad Dal)", "Proteins", "North Indian", 210, 12.5, 36.0, 1.8, 9.5, 32, "Low", True, False, True, False, True, True, True, False, "None", "Slow cook for dal makhani or ferment with rice for dosa batter.", "Rajma, Toor Dal", "500", "g", 90),
+        ("Black Beans Cooked", "Proteins", "International", 227, 15.2, 41.0, 0.9, 15.0, 30, "Low", True, False, True, False, True, False, False, True, "None", "High fiber bean; mash into burritos or quinoa bowls.", "Rajma, Kidney Beans", "500", "g", 110),
+        ("Textured Soy Chunks", "Proteins", "Pan-Indian", 210, 26.0, 15.0, 0.5, 7.0, 15, "Low", True, False, True, False, True, True, True, False, "Soy", "Boil in water for 5 mins; squeeze out water thoroughly before cooking.", "Tofu, Seitan", "200", "g", 45),
+        ("Plain Greek Yogurt 0%", "Proteins", "Mediterranean", 130, 20.0, 7.0, 0.4, 0.0, 12, "Low", True, False, False, False, True, True, True, True, "Dairy", "High protein probiotic yogurt; top with berries or chia seeds.", "Cottage Cheese, Skyr", "400", "g", 160),
+        ("Steamed Edamame Pods", "Proteins", "Asian", 188, 18.4, 13.8, 8.0, 8.0, 15, "Low", True, False, True, False, True, False, False, True, "Soy", "Steam for 5 mins; sprinkle with sea salt flakes.", "Sprouted Moong, Green Peas", "250", "g", 190),
+        ("Seitan Wheat Protein", "Proteins", "International", 370, 75.0, 14.0, 1.9, 0.6, 0, "Low", True, False, True, False, True, False, False, True, "Gluten,Wheat", "High protein wheat gluten meat substitute; slice into stir-fries.", "Soy Chunks, Tofu", "250", "g", 220),
+        ("Whey Protein Isolate", "Proteins", "International", 120, 25.0, 1.5, 0.5, 0.0, 0, "Low", True, False, False, True, True, True, True, True, "Dairy", "Mix 1 scoop with cold water or almond milk post-workout.", "Pea Protein, Soy Protein", "1", "kg", 2800),
+        ("Pea Protein Powder", "Proteins", "International", 115, 24.0, 2.0, 1.5, 1.0, 0, "Low", True, False, True, False, True, True, True, True, "None", "Plant-based hypoallergenic protein powder for smoothies.", "Whey Protein, Hemp Protein", "1", "kg", 1900),
+        ("Lean Ground Beef", "Proteins", "International", 200, 24.0, 0.0, 11.0, 0.0, 0, "Low", False, True, False, False, False, False, False, False, "None", "Brown in non-stick pan; drain fat before adding marinara.", "Ground Turkey, Chicken Breast", "500", "g", 320),
+        ("Mutton Curry Chunks", "Proteins", "North Indian", 210, 22.0, 0.0, 13.0, 0.0, 0, "Low", False, True, False, False, False, True, True, False, "None", "Slow cook in pressure cooker for 6 whistles with whole spices.", "Chicken Curry, Ground Beef", "500", "g", 420),
+        ("Grilled Shrimp (120g)", "Proteins", "International", 120, 24.0, 1.0, 1.5, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood,Shellfish", "Skewer and grill with garlic butter for 2 mins per side.", "Cod Fillet, Tilapia", "250", "g", 280),
+        ("Crab Meat (100g)", "Proteins", "International", 97, 19.0, 0.0, 1.5, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood,Shellfish", "Steam crab claws or stir-fry meat with chili and pepper.", "Shrimp, Fish Fillet", "200", "g", 320),
+        ("Tilapia Fillet (150g)", "Proteins", "International", 145, 30.0, 0.0, 2.5, 0.0, 0, "Low", False, True, False, False, False, False, False, True, "Seafood", "Pan-fry with paprika, garlic powder, and lemon juice.", "Cod Fillet, Salmon", "500", "g", 220),
+        ("Bangda Mackerel Fish", "Proteins", "South Indian", 240, 28.0, 0.0, 14.0, 0.0, 0, "Low", False, True, False, False, False, True, False, True, "Seafood", "Rich in Omega-3; pan fry on tawa with red chili paste.", "Sardines, Salmon", "500", "g", 180),
+        ("Chana Dal Cooked", "Proteins", "Pan-Indian", 205, 13.0, 33.0, 2.5, 9.0, 28, "Low", True, False, True, False, True, True, True, False, "None", "Cook with bottle gourd (lauki) for balanced protein dal.", "Toor Dal, Moong Dal", "1", "kg", 110),
+        ("Kollu Horse Gram Soup", "Proteins", "South Indian", 160, 11.0, 28.0, 1.0, 7.0, 25, "Low", True, False, True, False, True, True, False, False, "None", "Boil horse gram; temper with pepper and tamarind for fat loss soup.", "Rasam, Black Chana", "500", "g", 65),
+        ("Kala Chana Black Chickpeas", "Proteins", "Pan-Indian", 210, 12.0, 35.0, 2.8, 10.0, 26, "Low", True, False, True, False, True, True, True, False, "None", "Soak and pressure cook; sauté with dry spices for high fiber dish.", "Kabuli Chana, Rajma", "500", "g", 70),
+        ("Ricotta Cheese Part-Skim", "Proteins", "International", 170, 14.0, 6.0, 10.0, 0.0, 10, "Low", True, False, False, False, True, False, False, True, "Dairy", "Spread on toast or mix with berries and cinnamon.", "Cottage Cheese, Greek Yogurt", "250", "g", 210),
+        ("Swiss Cheese Slices", "Proteins", "International", 220, 16.0, 1.0, 18.0, 0.0, 0, "Low", True, False, False, False, True, False, False, True, "Dairy", "Melt over grilled turkey or veggie sandwiches.", "Paneer, Mozzarella Cheese", "200", "g", 240),
+        ("Hemp Protein Powder", "Proteins", "International", 120, 15.0, 8.0, 3.0, 7.0, 15, "Low", True, False, True, False, True, False, False, True, "None", "Complete plant protein loaded with essential fatty acids.", "Pea Protein, Soy Protein", "500", "g", 1200),
+        ("Whole Masoor Dal (Brown)", "Proteins", "Pan-Indian", 200, 13.0, 34.0, 1.5, 8.0, 26, "Low", True, False, True, False, True, True, True, False, "None", "Cook in onion garlic tomato curry.", "Moong Dal, Toor Dal", "1", "kg", 120),
+        ("Sprouted Kala Chana", "Proteins", "Pan-Indian", 130, 9.5, 22.0, 1.2, 7.5, 22, "Low", True, False, True, False, True, True, True, False, "None", "Sprout chickpeas; toss with lime and green chilies.", "Sprouted Moong, Boiled Peas", "250", "g", 45),
+        ("Pomfret Fish Fry", "Proteins", "Western Indian", 210, 24.0, 0.0, 12.0, 0.0, 0, "Low", False, True, False, False, False, True, False, True, "Seafood", "Marinate in red chili turmeric paste and shallow fry.", "Kingfish Fry, Mackerel", "500", "g", 480),
+        ("Surmai Kingfish Steak", "Proteins", "Western Indian", 230, 26.0, 0.0, 13.0, 0.0, 0, "Low", False, True, False, False, False, True, False, True, "Seafood", "Sear on iron tawa with malvani spice mix.", "Pomfret Fry, Salmon", "500", "g", 520),
+        ("Mathri Roasted Chana", "Proteins", "North Indian", 160, 11.0, 26.0, 3.0, 6.0, 28, "Low", True, False, True, False, True, False, True, False, "None", "Dry roasted chana snack high in protein and fiber.", "Peanuts, Almonds", "500", "g", 60),
+        ("Soy Milk Unsweetened", "Proteins", "International", 80, 7.0, 4.0, 4.0, 1.0, 30, "Low", True, False, True, False, True, True, True, True, "Soy", "Fortified with Vitamin B12 and Calcium.", "Almond Milk, Oat Milk", "1", "L", 110),
+        ("Almond Milk Fortified", "Proteins", "International", 40, 1.5, 1.5, 3.0, 1.0, 25, "Low", True, False, True, False, True, True, True, True, "Nuts", "Low calorie dairy-free milk alternative.", "Soy Milk, Oat Milk", "1", "L", 160),
+        ("Oat Milk Creamy", "Proteins", "International", 120, 3.0, 16.0, 5.0, 2.0, 45, "Low", True, False, True, False, True, True, True, True, "Gluten", "Creamy plant milk great for coffee and oatmeal.", "Soy Milk, Almond Milk", "1", "L", 190),
+        ("Skyr Icelandic Yogurt", "Proteins", "International", 110, 17.0, 6.0, 0.2, 0.0, 10, "Low", True, False, False, False, True, False, False, True, "Dairy", "Ultra thick high protein strained yogurt.", "Greek Yogurt, Cottage Cheese", "350", "g", 220),
+
+        # Healthy Fats & Seeds (35)
+        ("Raw Almonds (23 nuts)", "Healthy Fats", "International", 164, 6.0, 6.0, 14.0, 3.5, 0, "Low", True, False, True, False, True, True, True, True, "Nuts", "Eat raw or soak overnight in water; peel skin before eating.", "Walnuts, Pistachios", "500", "g", 420),
+        ("Walnut Halves (14 halves)", "Healthy Fats", "International", 185, 4.3, 3.9, 18.5, 1.9, 0, "Low", True, False, True, False, True, True, True, True, "Nuts", "Rich in Omega-3 ALA; chop into oats or morning fruit salad.", "Almonds, Flax Seeds", "250", "g", 340),
+        ("Raw Pistachios (49 nuts)", "Healthy Fats", "International", 159, 5.7, 7.7, 12.8, 3.0, 0, "Low", True, False, True, False, True, True, True, True, "Nuts", "Shell and eat raw as afternoon satiety snack.", "Almonds, Cashews", "250", "g", 310),
+        ("Raw Cashews (18 nuts)", "Healthy Fats", "Pan-Indian", 157, 5.1, 8.6, 12.4, 0.9, 0, "Low", True, False, True, False, True, True, True, False, "Nuts", "Blend soaked cashews into creamy vegan curries or soups.", "Almonds, Pistachios", "500", "g", 410),
+        ("Ground Flax Seeds", "Healthy Fats", "Pan-Indian", 110, 3.8, 6.0, 8.5, 5.6, 10, "Low", True, False, True, False, True, True, True, True, "None", "Always consume ground for Omega-3 absorption; stir into smoothies.", "Chia Seeds, Hemp Seeds", "250", "g", 70),
+        ("Chia Seeds (2 tbsp)", "Healthy Fats", "International", 138, 4.7, 12.0, 8.7, 9.8, 10, "Low", True, False, True, False, True, True, True, True, "None", "Soak in almond milk or water for 20 mins until gel forms.", "Flax Seeds, Basil Seeds", "250", "g", 160),
+        ("Raw Pumpkin Seeds", "Healthy Fats", "Pan-Indian", 151, 7.0, 5.0, 13.0, 1.7, 10, "Low", True, False, True, False, True, True, True, True, "None", "High zinc seeds; roast lightly on dry tawa.", "Sunflower Seeds, Watermelon Seeds", "250", "g", 180),
+        ("Sunflower Seeds", "Healthy Fats", "International", 165, 5.5, 7.0, 14.0, 3.0, 10, "Low", True, False, True, False, True, True, True, True, "None", "Rich in Vitamin E; sprinkle over green salads.", "Pumpkin Seeds, Sesame Seeds", "250", "g", 120),
+        ("White Sesame Seeds (Til)", "Healthy Fats", "Pan-Indian", 160, 5.0, 6.5, 13.5, 3.3, 10, "Low", True, False, True, False, True, True, True, False, "Sesame", "Dry roast; grind into tahini or toss over steamed veggies.", "Black Sesame, Flax Seeds", "200", "g", 60),
+        ("Black Sesame Seeds", "Healthy Fats", "South Indian", 160, 5.2, 6.0, 14.0, 3.5, 10, "Low", True, False, True, False, True, True, True, False, "Sesame", "Rich in calcium; sprinkle on ragi mudde or rice.", "White Sesame, Chia Seeds", "200", "g", 70),
+        ("Extra Virgin Olive Oil", "Healthy Fats", "Mediterranean", 119, 0.0, 0.0, 13.5, 0.0, 0, "Low", True, False, True, False, True, False, False, True, "None", "Use cold as salad dressing or drizzle over warm veggies.", "Avocado Oil, Cold Pressed Mustard Oil", "500", "ml", 480),
+        ("Avocado Oil", "Healthy Fats", "International", 124, 0.0, 0.0, 14.0, 0.0, 0, "Low", True, False, True, False, True, False, False, True, "None", "High smoke point oil ideal for high heat sautéing.", "Extra Virgin Olive Oil, Ghee", "500", "ml", 620),
+        ("Natural Peanut Butter", "Healthy Fats", "Pan-Indian", 190, 8.0, 7.0, 16.0, 2.0, 14, "Low", True, False, True, False, True, True, True, True, "Peanuts,Nuts", "Ensure 100% peanuts with no added palm oil or sugar.", "Almond Butter, Sunflower Butter", "350", "g", 170),
+        ("Almond Butter Unsweetened", "Healthy Fats", "International", 196, 6.8, 6.0, 17.8, 3.3, 12, "Low", True, False, True, False, True, True, True, True, "Nuts", "Spread on apple slices or multigrain toast.", "Peanut Butter, Tahini", "250", "g", 380),
+        ("Desi Cow Ghee (1 tsp)", "Healthy Fats", "Pan-Indian", 45, 0.0, 0.0, 5.0, 0.0, 0, "Low", True, False, False, False, True, True, True, False, "Dairy", "Add 1 tsp to warm dal or khichdi for butyric acid gut support.", "Cold Pressed Coconut Oil, Olive Oil", "500", "ml", 360),
+        ("Cold Pressed Coconut Oil", "Healthy Fats", "South Indian", 120, 0.0, 0.0, 13.6, 0.0, 0, "Low", True, False, True, False, True, True, False, False, "Coconut", "Ideal for South Indian tempering and medium heat cooking.", "Desi Ghee, Olive Oil", "500", "ml", 210),
+        ("Mustard Oil Kachi Ghani", "Healthy Fats", "North Indian", 120, 0.0, 0.0, 13.6, 0.0, 0, "Low", True, False, True, False, True, False, True, False, "Mustard", "Heat until smoking point before cooking North Indian dishes.", "Olive Oil, Sesame Oil", "1", "L", 180),
+        ("Brazil Nuts (4 nuts)", "Healthy Fats", "International", 130, 2.8, 2.4, 13.0, 1.5, 0, "Low", True, False, True, False, True, False, False, True, "Nuts", "Eat 2 nuts daily for 100% daily selenium requirement.", "Walnuts, Almonds", "100", "g", 290),
+        ("Macadamia Nuts", "Healthy Fats", "International", 204, 2.2, 3.9, 21.5, 2.4, 0, "Low", True, False, True, False, True, False, False, False, "Nuts", "Rich in monounsaturated fats; eat raw in moderation.", "Hazelnuts, Pecans", "150", "g", 420),
+        ("Hazelnuts (20 nuts)", "Healthy Fats", "International", 178, 4.2, 4.7, 17.0, 2.7, 0, "Low", True, False, True, False, True, False, False, True, "Nuts", "Roast lightly and crush over morning cereal.", "Almonds, Macadamia Nuts", "200", "g", 310),
+        ("Pecan Halves", "Healthy Fats", "International", 196, 2.6, 3.9, 20.0, 2.7, 0, "Low", True, False, True, False, True, False, False, False, "Nuts", "Mix into fruit salads or oatmeal.", "Walnuts, Brazil Nuts", "200", "g", 360),
+        ("Pine Nuts (2 tbsp)", "Healthy Fats", "Mediterranean", 190, 3.8, 3.7, 19.0, 1.0, 0, "Low", True, False, True, False, True, False, False, True, "Nuts", "Toast lightly; blend with basil and garlic into pesto.", "Walnuts, Sunflower Seeds", "100", "g", 450),
+        ("Unsweetened Shredded Coconut", "Healthy Fats", "South Indian", 110, 1.2, 4.0, 10.0, 2.5, 10, "Low", True, False, True, False, True, True, False, False, "Coconut", "Sprinkle on porridges or use in South Indian thoran.", "Chia Seeds, Sesame Seeds", "250", "g", 80),
+        ("Full Fat Coconut Milk", "Healthy Fats", "South Indian", 190, 1.8, 3.0, 19.0, 1.0, 0, "Low", True, False, True, False, True, True, False, False, "Coconut", "Add towards end of cooking curries to avoid curdling.", "Almond Milk, Greek Yogurt", "400", "ml", 110),
+        ("Tahini Sesame Paste", "Healthy Fats", "Mediterranean", 178, 5.0, 6.0, 16.0, 2.8, 10, "Low", True, False, True, False, True, False, False, True, "Sesame", "Whisk with lemon juice and garlic for salad dressing.", "Almond Butter, Peanut Butter", "250", "g", 240),
+        ("Watermelon Seeds (Magaz)", "Healthy Fats", "Pan-Indian", 158, 8.0, 4.3, 13.4, 1.0, 10, "Low", True, False, True, False, True, True, True, False, "None", "Dry roast; blend into gravies or toss over salads.", "Pumpkin Seeds, Muskmelon Seeds", "200", "g", 90),
+        ("Muskmelon Seeds Dried", "Healthy Fats", "Pan-Indian", 150, 7.0, 4.0, 13.0, 1.2, 10, "Low", True, False, True, False, True, True, True, False, "None", "Rich in protein and healthy fats.", "Watermelon Seeds, Sunflower Seeds", "200", "g", 95),
+        ("Dark Chocolate 85%", "Healthy Fats", "International", 120, 2.2, 9.0, 9.5, 2.5, 20, "Low", True, False, True, False, True, True, True, True, "Chocolate", "Eat 2 small squares post-dinner for flavonoid mood boost.", "Cocoa Powder, Almonds", "100", "g", 160),
+        ("Green Olives", "Healthy Fats", "Mediterranean", 40, 0.4, 1.0, 4.0, 1.0, 15, "Low", True, False, True, False, True, False, False, True, "None", "Rinse extra brine; chop into Mediterranean salads.", "Kalamata Olives, Avocado", "200", "g", 140),
+        ("Kalamata Olives", "Healthy Fats", "Mediterranean", 70, 0.6, 2.0, 7.0, 1.5, 15, "Low", True, False, True, False, True, False, False, True, "None", "Rich in oleic acid and polyphenols.", "Green Olives, Olive Oil", "200", "g", 180),
+        ("Hemp Seeds Hulled", "Healthy Fats", "International", 160, 10.0, 2.5, 14.0, 1.2, 10, "Low", True, False, True, False, True, True, True, True, "None", "Complete protein seeds loaded with Omega-3 & Omega-6.", "Chia Seeds, Flax Seeds", "250", "g", 480),
+        ("Basil Seeds (Sabja)", "Healthy Fats", "Pan-Indian", 100, 3.0, 10.0, 5.0, 7.0, 10, "Low", True, False, True, False, True, True, True, False, "None", "Soak 10 mins in water; excellent cooling stomach fiber.", "Chia Seeds, Flax Seeds", "200", "g", 90),
+        ("Gingelly Til Oil", "Healthy Fats", "South Indian", 120, 0.0, 0.0, 13.6, 0.0, 0, "Low", True, False, True, False, True, True, False, False, "Sesame", "Cold pressed unrefined sesame oil for traditional tempering.", "Coconut Oil, Olive Oil", "500", "ml", 190),
+        ("Cold Pressed Groundnut Oil", "Healthy Fats", "Western Indian", 120, 0.0, 0.0, 13.6, 0.0, 0, "Low", True, False, True, False, True, True, True, False, "Peanuts", "Unrefined peanut oil for savory stir-fries.", "Mustard Oil, Ghee", "1", "L", 210),
+        ("Cacao Nibs Raw", "Healthy Fats", "International", 130, 3.0, 8.0, 11.0, 6.0, 15, "Low", True, False, True, False, True, False, False, True, "Chocolate", "Crushed cocoa beans rich in magnesium and antioxidants.", "Dark Chocolate, Almonds", "200", "g", 320),
+
+        # South Indian Recipes (50)
+        ("Steamed Rice Idli (2 pcs)", "South Indian", "South Indian", 130, 4.0, 26.0, 0.5, 1.5, 55, "Medium", True, False, True, False, True, True, False, False, "None", "Ferment batter for 12 hrs; steam in idli cooker for 10 mins.", "Ragi Idli, Oats Idli", "1", "kg batter", 60),
+        ("Crispy Plain Dosa", "South Indian", "South Indian", 160, 3.8, 29.0, 3.5, 1.2, 60, "Medium", True, False, True, False, True, True, False, False, "None", "Spread batter thinly on hot tawa; use minimal oil.", "Oats Dosa, Ragi Dosa", "1", "kg batter", 65),
+        ("Oats Vegetable Dosa", "South Indian", "South Indian", 140, 5.0, 24.0, 2.8, 3.5, 50, "Low", True, False, True, False, True, True, False, False, "Gluten", "Blend powdered oats with curd and grated carrots.", "Plain Dosa, Pesarattu", "500", "g oats", 120),
+        ("Vegetable Sambar", "South Indian", "South Indian", 110, 5.5, 18.0, 2.0, 4.2, 45, "Low", True, False, True, False, True, True, False, False, "None", "Boil toor dal with drumstick, pumpkin, tamarind, and sambar powder.", "Rasam, Dal Tadka", "100", "g powder", 45),
+        ("Coconut Chutney", "South Indian", "South Indian", 75, 0.8, 2.5, 7.0, 1.8, 20, "Low", True, False, True, False, True, True, False, False, "Coconut", "Grind fresh coconut with roasted chana dal, green chili, and ginger.", "Tomato Chutney, Mint Chutney", "1", "pc coconut", 30),
+        ("Rava Upma Veggies", "South Indian", "South Indian", 190, 4.5, 34.0, 4.5, 2.8, 65, "Medium", True, False, True, False, False, True, False, False, "Gluten,Wheat", "Roast semolina first; sauté mustard seeds, cashews, and veggies.", "Oats Upma, Dalia Upma", "500", "g rava", 35),
+        ("Ragi Dosa (2 dosas)", "South Indian", "South Indian", 150, 4.5, 28.0, 2.0, 4.5, 48, "Low", True, False, True, False, True, True, False, False, "None", "Mix ragi flour with rice batter and butter milk.", "Oats Dosa, Pesarattu", "500", "g ragi", 40),
+        ("Ven Pongal Ghee", "South Indian", "South Indian", 230, 6.0, 36.0, 7.0, 3.0, 58, "Medium", True, False, False, False, True, True, False, False, "Dairy", "Pressure cook rice and moong dal; temper with ghee, cumin, black pepper, and cashews.", "Oats Pongal, Khichdi", "1", "kg rice", 60),
+        ("Curd Rice (Thayir Sadam)", "South Indian", "South Indian", 210, 5.5, 35.0, 5.0, 1.5, 54, "Low", True, False, False, False, True, True, False, False, "Dairy", "Mash soft cooked rice with fresh curd, pomegranate, and mustard tempering.", "Greek Yogurt Rice, Buttermilk", "1", "kg curd", 60),
+        ("Lemon Rice (Elumichai)", "South Indian", "South Indian", 240, 4.0, 42.0, 6.5, 2.0, 60, "Medium", True, False, True, False, True, True, False, False, "Citrus", "Toss cooked rice with turmeric, roasted peanuts, curry leaves, and lemon juice.", "Brown Rice Lemon Rice, Quinoa Lemon Rice", "1", "kg rice", 55),
+        ("Tamarind Rice (Puliyodarai)", "South Indian", "South Indian", 250, 4.2, 44.0, 7.0, 2.5, 62, "Medium", True, False, True, False, False, True, False, False, "Peanuts", "Simmer tamarind paste with sesame oil and spices before tossing with rice.", "Lemon Rice, Tomato Rice", "250", "g paste", 50),
+        ("Tomato Rice / Bath", "South Indian", "South Indian", 220, 3.8, 38.0, 6.0, 2.2, 58, "Medium", True, False, True, False, True, True, False, False, "None", "Sauté ripe tomatoes with mint, ginger, and biryani spices.", "Veg Pulao, Lemon Rice", "1", "kg rice", 55),
+        ("Appam with Coconut Milk", "South Indian", "South Indian", 180, 3.0, 30.0, 5.5, 1.8, 55, "Medium", True, False, True, False, True, True, False, False, "Coconut", "Ferment rice appam batter; pour in appam chatti to get lace edges.", "Idli, Neer Dosa", "500", "g batter", 40),
+        ("Kerala Puttu & Kadala", "South Indian", "South Indian", 290, 9.5, 48.0, 6.0, 7.5, 52, "Low", True, False, True, False, True, True, False, False, "None", "Layer coarse rice flour and coconut in puttu maker; serve with black chickpea curry.", "Idli Sambar, Appam", "500", "g puttu podi", 55),
+        ("Avial Mixed Veg Bowl", "South Indian", "South Indian", 140, 3.0, 14.0, 8.0, 4.0, 35, "Low", True, False, True, False, True, True, False, False, "Coconut", "Steam drumstick, raw banana, yam; fold into thick curd coconut paste.", "Mixed Veg Sabzi, Poriyal", "500", "g veggies", 60),
+        ("Rasam Pepper Soup", "South Indian", "South Indian", 50, 1.5, 8.0, 1.2, 1.5, 30, "Low", True, False, True, False, False, True, False, False, "None", "Simmer tamarind water with crushed black pepper, garlic, and tomatoes.", "Vegetable Clear Soup, Sambar", "100", "g powder", 40),
+        ("Pesarattu Moong Dosa", "South Indian", "South Indian", 165, 8.0, 26.0, 3.0, 5.0, 42, "Low", True, False, True, False, True, True, False, False, "None", "Grind soaked green moong with ginger and green chilies.", "Ragi Dosa, Oats Dosa", "500", "g moong", 75),
+        ("Vegetable Uttapam", "South Indian", "South Indian", 185, 4.5, 32.0, 4.5, 2.5, 60, "Medium", True, False, True, False, False, True, False, False, "None", "Thick dosa topped with finely chopped onion, tomato, and coriander.", "Plain Dosa, Idli", "1", "kg batter", 65),
+        ("Set Dosa (2 pcs)", "South Indian", "South Indian", 190, 4.8, 34.0, 4.0, 2.0, 62, "Medium", True, False, True, False, True, True, False, False, "None", "Soft spongy dosas cooked on low heat with lid covered.", "Plain Dosa, Uttapam", "1", "kg batter", 65),
+        ("Kanchipuram Idli", "South Indian", "South Indian", 110, 3.2, 19.0, 2.5, 1.8, 52, "Low", True, False, True, False, True, True, False, False, "Sesame", "Spiced idli batter steamed in banana leaves.", "Steamed Idli, Rava Idli", "500", "g batter", 50),
+        ("Bisi Bele Bath", "South Indian", "South Indian", 260, 7.5, 42.0, 7.0, 4.5, 56, "Medium", True, False, False, False, True, True, False, False, "Dairy", "Cook rice, toor dal, and vegetables with aromatic bisi bele bath masala.", "Khichdi, Sambar Rice", "100", "g powder", 50),
+        ("Vangi Brinjal Bath", "South Indian", "South Indian", 230, 4.0, 39.0, 6.5, 3.5, 55, "Medium", True, False, True, False, True, True, False, False, "None", "Sauté eggplant with ground spice powder before tossing with rice.", "Tomato Rice, Bisi Bele Bath", "500", "g brinjal", 30),
+        ("Hydrabadi Veg Biryani", "South Indian", "South Indian", 280, 6.5, 45.0, 8.0, 4.0, 62, "Medium", True, False, False, False, False, True, True, False, "Dairy", "Dum cook basmati rice with marinated vegetables and mint.", "Veg Pulao, Tomato Rice", "1", "kg rice", 120),
+        ("Kerala Fish Curry", "South Indian", "South Indian", 220, 24.0, 6.0, 11.0, 1.5, 30, "Low", False, True, False, False, False, True, False, False, "Seafood,Coconut", "Simmer fish in coconut milk and kudampuli (gamboge tamarind).", "Grilled Salmon, Fish Amritsari", "500", "g fish", 220),
+        ("Chettinad Chicken", "South Indian", "South Indian", 270, 32.0, 5.0, 14.0, 1.8, 20, "Low", False, True, False, False, False, True, False, False, "None", "Dry roast fennel, poppy seeds, and red chilies for fiery Chettinad paste.", "Punjabi Chicken Curry, Tandoori Chicken", "500", "g chicken", 170),
+        ("Egg Roast Kerala", "South Indian", "South Indian", 180, 13.0, 6.0, 11.0, 1.2, 20, "Low", False, False, False, True, False, True, False, False, "Eggs", "Sauté hard boiled eggs in caramelised onion tomato masala.", "Egg Curry Punjabi, Boiled Eggs", "6", "eggs", 45),
+        ("Prawns Thokku", "South Indian", "South Indian", 160, 20.0, 4.0, 7.0, 1.0, 15, "Low", False, True, False, False, False, True, False, False, "Seafood,Shellfish", "Stir-fry prawns with red chili, shallots, and curry leaves.", "Fish Curry, Grilled Shrimp", "250", "g prawns", 260),
+        ("Neer Thin Dosa", "South Indian", "South Indian", 140, 2.8, 28.0, 1.5, 1.0, 58, "Medium", True, False, True, False, True, True, False, False, "None", "Lacy thin watery rice batter cooked without flipping.", "Appam, Plain Dosa", "500", "g rice", 40),
+        ("Akki Rice Roti", "South Indian", "South Indian", 160, 3.0, 30.0, 3.0, 2.0, 60, "Medium", True, False, True, False, False, True, False, False, "None", "Knead rice flour with dill leaves, onion, and green chili.", "Jowar Roti, Ragi Mudde", "500", "g flour", 40),
+        ("Coconut Rice Bowl", "South Indian", "South Indian", 270, 3.8, 40.0, 10.0, 3.0, 60, "Medium", True, False, True, False, True, True, False, False, "Coconut", "Toss steamed rice with freshly grated coconut, cashews, and mustard seeds.", "Lemon Rice, Curd Rice", "1", "pc coconut", 30),
+        ("Oats Upma South Style", "South Indian", "South Indian", 180, 6.0, 28.0, 4.0, 4.5, 48, "Low", True, False, True, False, True, True, False, False, "Gluten", "Dry roast oats; sauté with mustard seeds, curry leaves, and veggies.", "Rava Upma, Dalia Upma", "500", "g oats", 120),
+        ("Ragi Idli (2 pcs)", "South Indian", "South Indian", 120, 4.2, 22.0, 0.8, 3.8, 45, "Low", True, False, True, False, True, True, False, False, "None", "Ferment ragi flour with urad dal batter; steam in idli molds.", "Steamed Rice Idli, Oats Idli", "500", "g ragi", 40),
+        ("Kothu Parotta Veg", "South Indian", "South Indian", 280, 6.0, 42.0, 9.0, 3.5, 65, "Medium", True, False, True, False, False, True, False, False, "Gluten,Wheat", "Shred layered parotta; toss on hot griddle with curry spices.", "Veg Biryani, Chapati", "400", "g", 50),
+        ("Inji Puli Ginger Pickle", "South Indian", "South Indian", 40, 0.5, 8.0, 1.0, 1.0, 30, "Low", True, False, True, False, False, True, False, False, "None", "Dark sweet tart ginger tamarind chutney.", "Coconut Chutney, Mint Chutney", "200", "g", 45),
+        ("Kootu Pumpkin Chana Dal", "South Indian", "South Indian", 130, 5.0, 18.0, 3.5, 4.0, 38, "Low", True, False, True, False, True, True, False, False, "Coconut", "Simmer yellow pumpkin and chana dal with fresh coconut cumin paste.", "Sambar, Avial", "500", "g pumpkin", 30),
+        ("Thoran Cabbage Coconut", "South Indian", "South Indian", 90, 2.5, 9.0, 4.5, 3.0, 25, "Low", True, False, True, False, True, True, False, False, "Coconut", "Stir-fry finely shredded cabbage with turmeric, mustard, and coconut.", "Poriyal, Beans Stir-fry", "500", "g cabbage", 25),
+        ("Beans Carrot Poriyal", "South Indian", "South Indian", 85, 2.2, 10.0, 3.8, 3.5, 30, "Low", True, False, True, False, False, True, False, False, "Coconut", "Dice french beans and carrots; sauté with mustard and grated coconut.", "Thoran, Mixed Veg Sabzi", "500", "g veg", 40),
+        ("Mambazha Pulissery (Mango)", "South Indian", "South Indian", 150, 2.8, 26.0, 3.0, 2.0, 45, "Low", True, False, False, False, True, True, False, False, "Dairy,Coconut", "Ripe mango cooked in sour curd coconut cumin gravy.", "Curd Rice, Avial", "500", "g mango", 60),
+        ("Fish Molee Kerala", "South Indian", "South Indian", 240, 26.0, 5.0, 12.0, 1.0, 25, "Low", False, True, False, False, False, True, False, False, "Seafood,Coconut", "Mild aromatic fish curry poached in coconut milk with green chilies.", "Kerala Fish Curry, Grilled Cod", "500", "g fish", 260),
+        ("Chicken Stew Appam Combo", "South Indian", "South Indian", 290, 28.0, 24.0, 10.0, 2.5, 48, "Low", False, True, False, False, False, True, False, False, "Coconut", "Tender chicken cooked in gentle coconut milk stew paired with appam.", "Chettinad Chicken, Egg Roast", "500", "g chicken", 180),
+        ("Errachi Mutton Roast", "South Indian", "South Indian", 320, 28.0, 4.0, 20.0, 1.5, 20, "Low", False, True, False, False, False, True, False, False, "None", "Slow roasted mutton with shallots, garlic, and crushed black pepper.", "Mutton Curry, Chettinad Chicken", "500", "g mutton", 440),
+        ("Malabar Veg Biryani", "South Indian", "South Indian", 260, 5.8, 42.0, 7.5, 4.0, 58, "Medium", True, False, False, False, False, True, False, False, "Dairy,Nuts", "Short grain kaima rice cooked with fried onions, cashews, and ghee.", "Veg Pulao, Hydrabadi Biryani", "1", "kg rice", 110),
+        ("Parippu Kerala Dal", "South Indian", "South Indian", 170, 10.0, 26.0, 2.5, 6.0, 32, "Low", True, False, True, False, True, True, False, False, "Coconut", "Yellow moong dal boiled and mashed with coconut cumin green chili paste.", "Yellow Toor Dal, Rasam", "500", "g dal", 70),
+        ("Mor Kuzhambu (Buttermilk)", "South Indian", "South Indian", 95, 3.5, 8.0, 5.0, 1.5, 25, "Low", True, False, False, False, True, True, False, False, "Dairy", "Sour curd seasoned with coconut, cumin, coriander, and ash gourd.", "Curd Rice, Rasam", "1", "kg curd", 55),
+        ("Vada Sambar (2 vadas)", "South Indian", "South Indian", 260, 7.0, 32.0, 11.0, 4.0, 65, "Medium", True, False, True, False, True, True, False, False, "None", "Crispy deep fried urad dal donuts served dunked in hot sambar.", "Idli Sambar, Uttapam", "500", "g dal", 60),
+        ("Rava Dosa Thin", "South Indian", "South Indian", 170, 3.5, 30.0, 4.0, 1.5, 68, "Medium", True, False, True, False, False, True, False, False, "Gluten,Wheat", "Crispy net-like semolina dosa with peppercorns and green chilies.", "Plain Dosa, Oats Dosa", "500", "g rava", 35),
+        ("Jackfruit Seed Curry", "South Indian", "South Indian", 150, 4.0, 30.0, 1.5, 5.0, 40, "Low", True, False, True, False, True, True, False, False, "None", "Boiled jackfruit seeds simmered in roasted coconut gravy.", "Rajma Masala, Chole", "500", "g seeds", 40),
+        ("Raw Plantain Poriyal", "South Indian", "South Indian", 110, 2.0, 22.0, 1.5, 3.5, 45, "Low", True, False, True, False, True, True, False, False, "Coconut", "Steam green banana cubes; stir-fry with coconut and mustard.", "Aloo Gobi, Beetroot Sabzi", "1", "kg plantain", 40),
+        ("Sweet Pongal (Chakkara)", "South Indian", "South Indian", 260, 4.5, 48.0, 6.0, 2.0, 65, "Medium", True, False, False, False, True, True, False, False, "Dairy,Nuts", "Rice and moong dal cooked with jaggery syrup, ghee, and cashews.", "Ven Pongal, Payasam", "500", "g jaggery", 50),
+        ("Payasam Semiya Milk", "South Indian", "South Indian", 220, 4.0, 36.0, 6.5, 1.0, 68, "Medium", True, False, False, False, False, True, False, False, "Dairy,Nuts,Gluten,Wheat", "Vermicelli pudding simmered in sweetened milk with cardamom.", "Sweet Pongal, Kheer", "200", "g semiya", 30),
+
+        # North Indian Recipes (50)
+        ("Palak Paneer", "North Indian", "North Indian", 240, 14.0, 8.0, 17.0, 3.5, 30, "Low", True, False, False, False, True, False, True, False, "Dairy", "Blanch spinach; blend and simmer with paneer cubes and mild spices.", "Tofu Palak, Matar Paneer", "200", "g paneer", 90),
+        ("Dal Makhani", "North Indian", "North Indian", 260, 11.0, 30.0, 10.0, 7.0, 35, "Low", True, False, False, False, True, False, True, False, "Dairy", "Slow simmer black urad dal and rajma overnight; touch of fresh cream.", "Yellow Dal Tadka, Chole", "500", "g dal", 90),
+        ("Punjabi Chole Curry", "North Indian", "North Indian", 230, 12.0, 34.0, 5.5, 8.5, 32, "Low", True, False, True, False, False, False, True, False, "None", "Simmer chickpea with black tea infusion, pomegranate powder, and chole spices.", "Rajma Masala, Black Chana", "500", "g chana", 80),
+        ("Rajma Masala Gravy", "North Indian", "North Indian", 210, 11.5, 32.0, 4.0, 8.0, 28, "Low", True, False, True, False, False, False, True, False, "None", "Soak red kidney beans; cook in thick tomato onion gravy.", "Punjabi Chole, Dal Makhani", "500", "g rajma", 85),
+        ("Aloo Gobi Sabzi", "North Indian", "North Indian", 150, 3.5, 20.0, 6.5, 4.0, 55, "Medium", True, False, True, False, False, False, True, False, "None", "Sauté potato and cauliflower florets with cumin, turmeric, and amchur.", "Bhindi Masala, Baingan Bharta", "1", "kg veg", 50),
+        ("Bhindi Do Pyaza", "North Indian", "North Indian", 120, 2.8, 12.0, 7.0, 3.8, 30, "Low", True, False, True, False, False, False, True, False, "None", "Stir-fry okra with sliced onions and dry mango powder.", "Aloo Gobi, French Beans", "500", "g bhindi", 40),
+        ("Methi Thepla (2 pcs)", "North Indian", "Western Indian", 180, 5.0, 26.0, 6.0, 3.5, 52, "Low", True, False, True, False, True, False, True, False, "Gluten,Wheat", "Knead whole wheat flour with fresh fenugreek leaves, curd, and sesame seeds.", "Missi Roti, Whole Wheat Roti", "500", "g flour", 45),
+        ("Moong Dal Khichdi", "North Indian", "Pan-Indian", 210, 8.5, 36.0, 3.5, 4.0, 45, "Low", True, False, False, False, True, True, True, False, "Dairy", "Pressure cook equal parts yellow moong dal and rice; finish with ghee temper.", "Dalia Khichdi, Oats Khichdi", "500", "g dal", 70),
+        ("Missi Besan Roti", "North Indian", "North Indian", 140, 6.0, 22.0, 3.0, 4.0, 42, "Low", True, False, True, False, True, False, True, False, "Gluten,Wheat", "Mix chickpea flour (besan) and wheat flour with ajwain and kasuri methi.", "Methi Thepla, Jowar Roti", "500", "g besan", 60),
+        ("Kadai Paneer Curry", "North Indian", "North Indian", 270, 15.0, 10.0, 19.0, 2.8, 32, "Low", True, False, False, False, True, False, True, False, "Dairy", "Toss paneer cubes and capsicum in freshly crushed coriander pepper kadai masala.", "Palak Paneer, Shahi Paneer", "200", "g paneer", 90),
+        ("Punjabi Baingan Bharta", "North Indian", "North Indian", 130, 2.5, 14.0, 7.5, 4.5, 25, "Low", True, False, True, False, False, False, True, False, "None", "Char whole brinjal over open flame; mash with garlic, tomatoes, and cilantro.", "Aloo Gobi, Bhindi Masala", "1", "kg brinjal", 45),
+        ("Jeera Rice (1 cup)", "North Indian", "North Indian", 200, 3.8, 40.0, 2.5, 1.2, 64, "Medium", True, False, True, False, True, True, True, False, "None", "Temper cumin seeds in ghee; fold into steamed basmati rice.", "Brown Rice, Veg Pulao", "1", "kg rice", 110),
+        ("Matar Paneer Curry", "North Indian", "North Indian", 230, 13.0, 14.0, 14.0, 4.0, 38, "Low", True, False, False, False, True, False, True, False, "Dairy", "Simmer green peas and soft paneer in spiced onion tomato gravy.", "Palak Paneer, Kadai Paneer", "200", "g paneer", 90),
+        ("Tandoori Wheat Roti", "North Indian", "North Indian", 110, 3.5, 22.0, 0.5, 2.8, 60, "Medium", True, False, True, False, True, False, True, False, "Gluten,Wheat", "Bake whole wheat roti in clay tandoor or tawa.", "Whole Wheat Roti, Missi Roti", "1", "pack", 40),
+        ("Garlic Butter Naan", "North Indian", "North Indian", 220, 5.5, 36.0, 6.5, 1.5, 74, "High", True, False, False, False, False, False, True, False, "Gluten,Wheat,Dairy", "Bake white flour dough; brush with melted garlic butter.", "Tandoori Roti, Missi Roti", "1", "pack", 50),
+        ("Tandoori Chicken Tikka", "North Indian", "North Indian", 230, 35.0, 3.0, 8.0, 0.8, 15, "Low", False, True, False, False, False, False, True, False, "Dairy", "Marinate chicken in spiced hung curd; char in oven or grill.", "Grilled Chicken Breast, Butter Chicken", "500", "g chicken", 180),
+        ("Butter Chicken Curry", "North Indian", "North Indian", 340, 28.0, 8.0, 22.0, 1.2, 35, "Low", False, True, False, False, False, False, True, False, "Dairy,Nuts", "Simmer grilled chicken in rich tomato cashew butter gravy.", "Punjabi Chicken Curry, Tandoori Chicken", "500", "g chicken", 220),
+        ("Punjabi Chicken Curry", "North Indian", "North Indian", 250, 30.0, 6.0, 12.0, 1.5, 25, "Low", False, True, False, False, False, False, True, False, "None", "Home-style chicken cooked with whole garams, onion, and tomato.", "Butter Chicken, Chettinad Chicken", "500", "g chicken", 160),
+        ("Fish Amritsari Fry", "North Indian", "North Indian", 210, 22.0, 6.0, 11.0, 0.5, 20, "Low", False, True, False, False, False, False, True, False, "Seafood,Mustard", "Coat fish fillets in besan, ajwain, and mustard oil; shallow fry.", "Grilled Cod, Kerala Fish Curry", "500", "g fish", 240),
+        ("Mutton Rogan Josh", "North Indian", "North Indian", 310, 26.0, 5.0, 21.0, 1.0, 20, "Low", False, True, False, False, False, False, True, False, "Dairy", "Kashmiri slow cooked mutton with alkanet root (ratanjot) and fennel.", "Punjabi Chicken, Beef Curry", "500", "g mutton", 420),
+        ("Egg Curry Punjabi", "North Indian", "North Indian", 190, 13.0, 7.0, 12.0, 1.5, 20, "Low", False, False, False, True, False, False, True, False, "Eggs", "Simmer hard boiled eggs in thick onion tomato masala.", "Egg Roast Kerala, Paneer Bhurji", "6", "eggs", 45),
+        ("Kadhi Pakora Gravy", "North Indian", "North Indian", 240, 7.0, 22.0, 14.0, 2.5, 55, "Medium", True, False, False, False, False, False, True, False, "Dairy", "Simmer sour yogurt besan gravy with fried chickpea flour dumplings.", "Dal Makhani, Chole", "500", "g curd", 50),
+        ("Lauki Chana Dal Gravy", "North Indian", "North Indian", 160, 7.5, 24.0, 3.5, 5.5, 32, "Low", True, False, True, False, True, False, True, False, "None", "Light nutritious curry made by combining bottle gourd and chana dal.", "Yellow Toor Dal, Moong Dal", "500", "g lauki", 30),
+        ("Paneer Bhurji Scramble", "North Indian", "North Indian", 280, 19.0, 6.0, 20.0, 1.2, 20, "Low", True, False, False, False, False, False, True, False, "Dairy", "Crumble paneer and sauté with capsicum, tomatoes, and cumin.", "Tofu Scramble, Egg Scramble", "200", "g paneer", 90),
+        ("Soya Chaap Masala", "North Indian", "North Indian", 260, 18.0, 16.0, 14.0, 4.0, 30, "Low", True, False, True, False, True, False, True, False, "Soy,Gluten,Wheat", "Marinate soya sticks; roast and cook in rich onion tomato gravy.", "Paneer Kadai, Tofu Curry", "250", "g chaap", 80),
+        ("Gajar Matar Sabzi", "North Indian", "North Indian", 110, 3.0, 16.0, 4.0, 4.2, 45, "Low", True, False, True, False, True, False, True, False, "None", "Stir-fry sweet red carrots and green peas with cumin.", "Aloo Gobi, Bhindi Masala", "500", "g carrots", 40),
+        ("Dum Aloo Gravy", "North Indian", "North Indian", 210, 3.5, 26.0, 10.0, 3.0, 62, "Medium", True, False, False, False, False, False, True, False, "Dairy,Nuts", "Prick baby potatoes; deep fry and simmer in spiced cashew yogurt gravy.", "Baingan Bharta, Matar Paneer", "500", "g potato", 30),
+        ("Shahi Paneer Gravy", "North Indian", "North Indian", 320, 14.0, 12.0, 25.0, 2.0, 40, "Low", True, False, False, False, True, False, True, False, "Dairy,Nuts", "Rich mild paneer curry prepared with cashew paste and saffron.", "Kadai Paneer, Palak Paneer", "200", "g paneer", 95),
+        ("Aloo Stuffed Paratha", "North Indian", "North Indian", 260, 5.0, 38.0, 10.0, 3.0, 68, "Medium", True, False, False, False, False, False, True, False, "Gluten,Wheat,Dairy", "Stuff spiced mashed potatoes into wheat dough; roast with ghee.", "Methi Thepla, Paneer Paratha", "500", "g flour", 45),
+        ("Paneer Paratha", "North Indian", "North Indian", 290, 12.0, 30.0, 14.0, 2.5, 55, "Medium", True, False, False, False, False, False, True, False, "Gluten,Wheat,Dairy", "Stuff grated paneer with green chili and coriander into flatbread.", "Aloo Paratha, Methi Thepla", "200", "g paneer", 90),
+        ("Veg Pulao Basmati", "North Indian", "North Indian", 210, 4.5, 38.0, 4.5, 3.0, 58, "Medium", True, False, False, False, True, True, True, False, "Dairy", "Sauté whole spices and mixed vegetables with fragrant basmati rice.", "Jeera Rice, Brown Rice Pulao", "1", "kg rice", 100),
+        ("Yellow Dal Tadka", "North Indian", "North Indian", 180, 10.5, 28.0, 3.0, 6.0, 30, "Low", True, False, False, False, True, True, True, False, "Dairy", "Yellow arhar dal cooked soft; tempered with ghee, garlic, and dry chilies.", "Moong Dal, Dal Makhani", "1", "kg dal", 140),
+        ("Tofu Palak Greens", "North Indian", "North Indian", 190, 16.0, 7.0, 11.0, 4.0, 25, "Low", True, False, True, False, True, True, True, True, "Soy", "Pureed spinach curry paired with pan-seared organic tofu cubes.", "Palak Paneer, Soya Curry", "200", "g tofu", 75),
+        ("Malai Kofta Gravy", "North Indian", "North Indian", 340, 9.0, 28.0, 22.0, 2.5, 60, "Medium", True, False, False, False, False, False, True, False, "Dairy,Nuts,Gluten,Wheat", "Fried paneer potato dumplings simmered in rich creamy cashew sauce.", "Shahi Paneer, Matar Paneer", "200", "g paneer", 110),
+        ("Chole Bhature (2 bhature)", "North Indian", "North Indian", 480, 14.0, 62.0, 20.0, 7.0, 78, "High", True, False, False, False, False, False, True, False, "Gluten,Wheat,Dairy", "Deep fried fermented maida bread served with spicy chickpea curry.", "Chole Kulcha, Puri Bhaji", "500", "g flour", 60),
+        ("Puri Aloo Bhaji (3 puris)", "North Indian", "North Indian", 380, 7.0, 52.0, 16.0, 4.5, 75, "High", True, False, True, False, False, False, True, False, "Gluten,Wheat", "Deep fried puffy whole wheat flatbreads with spiced potato curry.", "Aloo Paratha, Bhatura", "500", "g flour", 50),
+        ("Tandoori Gobhi Tikka", "North Indian", "North Indian", 120, 4.0, 12.0, 6.0, 4.0, 30, "Low", True, False, False, False, True, False, True, False, "Dairy", "Cauliflower florets marinated in spiced curd and charred in tandoor.", "Paneer Tikka, Mushroom Tikka", "500", "g gobhi", 40),
+        ("Paneer Tikka Shashlik", "North Indian", "North Indian", 250, 18.0, 8.0, 16.0, 2.0, 25, "Low", True, False, False, False, True, False, True, False, "Dairy", "Skewered paneer, capsicum, and onions grilled with tandoori spices.", "Tofu Tikka, Chicken Tikka", "200", "g paneer", 90),
+        ("Mushroom Do Pyaza", "North Indian", "North Indian", 140, 5.0, 10.0, 8.0, 2.5, 25, "Low", True, False, True, False, False, True, True, True, "None", "Button mushrooms sautéed with double portion caramelized onions.", "Bhindi Do Pyaza, Kadai Paneer", "200", "g mushroom", 60),
+        ("Sarson Ka Saag", "North Indian", "North Indian", 160, 5.5, 12.0, 10.0, 5.0, 25, "Low", True, False, False, False, True, False, True, False, "Mustard,Dairy", "Mustard and spinach greens slow cooked with white butter and garlic.", "Palak Paneer, Methi Sabzi", "1", "bunch greens", 30),
+        ("Kashmiri Dum Aloo", "North Indian", "North Indian", 220, 3.8, 28.0, 11.0, 3.5, 60, "Medium", True, False, True, False, False, False, True, False, "Fennel", "Baby potatoes cooked in fennel and dry ginger spiced yogurt gravy.", "Punjabi Dum Aloo, Aloo Gobi", "500", "g potato", 35),
+        ("Veg Jalfrezi Stir-fry", "North Indian", "North Indian", 150, 4.0, 16.0, 7.0, 4.5, 40, "Low", True, False, True, False, True, True, True, True, "None", "Julienned capsicum, carrots, and paneer stir-fried in tangy tomato sauce.", "Mixed Veg Sabzi, Bhindi Masala", "500", "g veg", 50),
+        ("Pau Bhaji Veggie Mash", "North Indian", "Western Indian", 260, 6.0, 38.0, 9.0, 6.0, 68, "Medium", True, False, False, False, False, True, True, False, "Dairy,Gluten,Wheat", "Spiced mashed potato cauliflower tomato bhaji served with buttered buns.", "Aloo Gobi, Chole Bhature", "1", "kg veg", 70),
+        ("Methi Malai Matar", "North Indian", "North Indian", 250, 8.0, 18.0, 16.0, 4.5, 42, "Low", True, False, False, False, True, False, True, False, "Dairy,Nuts", "Sweet green peas and fresh methi leaves simmered in cashew cream sauce.", "Matar Paneer, Palak Paneer", "200", "g peas", 50),
+        ("Corn Capsicum Sabzi", "North Indian", "North Indian", 160, 4.5, 22.0, 6.5, 3.8, 55, "Medium", True, False, True, False, True, True, True, False, "Corn", "Sweet corn kernels and green bell peppers cooked in onion tomato gravy.", "Aloo Gobi, Bhindi Masala", "250", "g corn", 45),
+        ("Navratan Korma Gravy", "North Indian", "North Indian", 280, 7.5, 24.0, 17.0, 4.0, 50, "Low", True, False, False, False, False, False, True, False, "Dairy,Nuts", "Nine gem mild curry of vegetables, nuts, and paneer in sweet cream sauce.", "Shahi Paneer, Malai Kofta", "500", "g veg", 90),
+        ("Handi Veg Curry", "North Indian", "North Indian", 210, 6.0, 18.0, 12.0, 4.2, 45, "Low", True, False, False, False, True, False, True, False, "Dairy", "Assorted vegetables slow cooked in clay handi pot with whole spices.", "Veg Kadai, Mixed Veg Sabzi", "500", "g veg", 60),
+        ("Reshmi Chicken Kebab", "North Indian", "North Indian", 260, 34.0, 2.0, 12.0, 0.5, 15, "Low", False, True, False, False, False, False, True, False, "Dairy,Nuts", "Creamy chicken mince skewers marinated in cream, cashew, and white pepper.", "Tandoori Chicken Tikka, Chicken Curry", "500", "g chicken", 210),
+        ("Galouti Kebab Veg", "North Indian", "North Indian", 170, 7.0, 18.0, 8.0, 4.5, 35, "Low", True, False, True, False, False, False, True, False, "None", "Melt-in-mouth smoked kidney bean and raw banana kebabs.", "Rajma Cutlet, Shami Kebab", "250", "g rajma", 60),
+        ("Rajma Cutlet (2 pcs)", "North Indian", "North Indian", 160, 8.0, 20.0, 5.0, 5.0, 32, "Low", True, False, True, False, False, False, True, False, "None", "Pan-fried red kidney bean cutlets with mint chutney.", "Galouti Kebab Veg, Chana Tikki", "250", "g rajma", 60)
+    ]
+
+    fid = 1
+    for item in raw_food_items:
+        add_f(fid, *item)
+        fid += 1
+
+    df_food = pd.DataFrame(foods)
+    food_csv_path = os.path.join(DATA_DIR, "food_database.csv")
+    df_food.to_csv(food_csv_path, index=False)
+    print(f"Expanded Food Database created with {len(df_food)} items at: {food_csv_path}")
+
+def create_clinical_dataset(num_records=2500):
+    genders = ["Male", "Female", "Transgender"]
+    activity_levels = ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Athlete"]
+    occupations = ["Student", "Office Worker", "Teacher", "Homemaker", "Manual Labor", "Healthcare Worker", "Retired"]
+    
+    fitness_goals = [
+        "Weight Loss", "Fat Loss", "Weight Gain", "Maintenance", "Muscle Gain", "Lean Muscle", "Strength Training",
+        "Endurance Training", "Athletic Performance", "Diabetic Control", "Heart Health", "Low Cholesterol",
+        "Improve Energy", "Improve Digestion", "Healthy Aging"
+    ]
+    
+    medical_conditions = [
+        "None", "Diabetes Type 2", "Prediabetes", "Hypertension", "Obesity", "High Cholesterol", "Heart Disease",
+        "PCOS", "Hypothyroidism", "Hyperthyroidism", "IBS", "GERD", "Gastritis", "Celiac Disease", "Lactose Intolerance",
+        "Anemia", "Iron Deficiency", "Vitamin D Deficiency", "Vitamin B12 Deficiency", "Arthritis", "Osteoporosis"
+    ]
+    
+    food_allergies = [
+        "None", "Nuts", "Peanuts", "Dairy", "Gluten", "Wheat", "Eggs", "Soy",
+        "Seafood", "Shellfish", "Sesame", "Mustard", "Corn", "Coconut", "Chocolate",
+        "Citrus", "Artificial Sweeteners"
+    ]
+    
+    dietary_preferences = [
+        "Vegetarian", "Non-Vegetarian", "Vegan", "Eggetarian", "Jain", "Mediterranean",
+        "South Indian", "North Indian", "High Protein", "Low Carb", "Gluten Free", "Dairy Free"
+    ]
+
+    stress_levels = ["Low", "Moderate", "High"]
+    smoking_statuses = ["Non-Smoker", "Occasional", "Regular"]
+    alcohol_consumptions = ["None", "Occasional", "Moderate", "Heavy"]
+
+    act_multipliers = {"Sedentary": 1.20, "Lightly Active": 1.375, "Moderately Active": 1.55, "Very Active": 1.725, "Athlete": 1.90}
+
+    rows = []
+    for _ in range(num_records):
+        gender = random.choice(genders)
+        age = random.randint(18, 75)
+        height = random.randint(145, 195)
+        
+        occ = random.choice(occupations)
+        act = random.choice(activity_levels)
+        med = random.choice(medical_conditions)
+        goal = random.choice(fitness_goals)
+        pref = random.choice(dietary_preferences)
+        allergy = random.choice(food_allergies)
+        
+        stress = random.choice(stress_levels)
+        smoking = random.choice(smoking_statuses)
+        alcohol = random.choice(alcohol_consumptions)
+        
+        base_w = height - 100
+        if gender == "Female": base_w *= 0.90
+        elif gender == "Transgender": base_w *= 0.95
+            
+        if med in ["Obesity", "Diabetes Type 2", "Prediabetes"]: weight = base_w * random.uniform(1.25, 1.7)
+        elif med in ["PCOS", "Hypothyroidism"]: weight = base_w * random.uniform(1.1, 1.35)
+        elif goal in ["Weight Loss", "Fat Loss"]: weight = base_w * random.uniform(1.05, 1.4)
+        elif goal in ["Weight Gain", "Muscle Gain", "Strength Training"]: weight = base_w * random.uniform(0.85, 1.15)
+        else: weight = base_w * random.uniform(0.85, 1.2)
+            
+        weight = round(weight, 1)
+        bmi = round(weight / ((height / 100) ** 2), 1)
+        
+        if bmi >= 30.0 and med == "None": med = "Obesity"
+            
+        if gender == "Male": bmr = 10 * weight + 6.25 * height - 5 * age + 5
+        else: bmr = 10 * weight + 6.25 * height - 5 * age - 161
+            
+        tdee = bmr * act_multipliers.get(act, 1.375)
+        
+        goal_offsets = {
+            "Weight Loss": -500, "Fat Loss": -450, "Weight Gain": 450, "Maintenance": 0,
+            "Muscle Gain": 500, "Lean Muscle": 300, "Strength Training": 500, "Endurance Training": 400,
+            "Athletic Performance": 400, "Diabetic Control": -250, "Heart Health": -200,
+            "Low Cholesterol": -200, "Improve Energy": 0, "Improve Digestion": 0, "Healthy Aging": -100
+        }
+        target_cal = max(1200, round(tdee + goal_offsets.get(goal, 0)))
+        
+        water = round(random.uniform(1.5, 4.5), 1)
+        sleep = round(random.uniform(5.0, 9.5), 1)
+        steps = random.randint(2000, 18000)
+        
+        if med in ["Diabetes Type 2", "Prediabetes"]: cat = "Diabetic-Friendly"
+        elif med in ["Hypertension", "Heart Disease", "High Cholesterol"]: cat = "Heart-Healthy"
+        elif med in ["Obesity"] or goal in ["Fat Loss", "Low Carb"]: cat = "Low-Carb"
+        elif goal == "Keto": cat = "Keto"
+        elif med == "PCOS": cat = "PCOS-Friendly"
+        elif med in ["Hypothyroidism", "Hyperthyroidism"]: cat = "Thyroid-Friendly"
+        elif goal in ["Muscle Gain", "Lean Muscle", "Strength Training"]: cat = "High-Protein"
+        elif pref == "Vegan": cat = "Vegan-Balanced"
+        elif pref == "Jain": cat = "Jain-Balanced"
+        elif pref == "Gluten Free" or med in ["Celiac Disease"]: cat = "Gluten-Free-Balanced"
+        else: cat = "Balanced"
+            
+        if cat == "Keto":
+            p_g = round((target_cal * 0.25) / 4)
+            c_g = round((target_cal * 0.05) / 4)
+            f_g = round((target_cal * 0.70) / 9)
+        elif cat == "High-Protein":
+            p_g = round((target_cal * 0.35) / 4)
+            c_g = round((target_cal * 0.40) / 4)
+            f_g = round((target_cal * 0.25) / 9)
+        elif cat in ["Low-Carb", "Diabetic-Friendly"]:
+            p_g = round((target_cal * 0.30) / 4)
+            c_g = round((target_cal * 0.25) / 4)
+            f_g = round((target_cal * 0.45) / 9)
+        else:
+            p_g = round((target_cal * 0.20) / 4)
+            c_g = round((target_cal * 0.50) / 4)
+            f_g = round((target_cal * 0.30) / 9)
+            
+        fib_g = 35 if cat in ["Diabetic-Friendly", "PCOS-Friendly", "Low-Carb"] else 28
+        
+        rows.append({
+            "Age": age, "Gender": gender, "Height": height, "Weight": weight, "BMI": bmi,
+            "ActivityLevel": act, "Occupation": occ, "FitnessGoal": goal, "MedicalCondition": med,
+            "FoodAllergy": allergy, "DietaryPreference": pref, "DailyWaterIntake_L": water,
+            "Sleep_Hours": sleep, "DailySteps": steps, "StressLevel": stress,
+            "SmokingStatus": smoking, "AlcoholConsumption": alcohol, "TargetCalories": target_cal,
+            "Protein_g": p_g, "Carbs_g": c_g, "Fat_g": f_g, "Fiber_g": fib_g, "DietCategory": cat
+        })
+
+    df_diet = pd.DataFrame(rows)
+    diet_csv_path = os.path.join(DATA_DIR, "diet_dataset.csv")
+    df_diet.to_csv(diet_csv_path, index=False)
+    print(f"Clinical Dataset created with {len(df_diet)} records at: {diet_csv_path}")
+
+if __name__ == "__main__":
+    create_food_database()
+    create_clinical_dataset(2500)
