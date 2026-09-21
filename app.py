@@ -1,10 +1,11 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import os
 
 import core.nutrition_utils as nu
-import core.recommendation_engine as re_eng
+import core.recommendation_engine as re_engine
 import pages.profile as page_profile
 
 import pages.home as page_home
@@ -29,16 +30,33 @@ st.set_page_config(
 )
 
 # Dark Glassmorphism Project Styling
-st.markdown("""
+st.markdown(
+    """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-    
+
     html, body, [class*="css"] {
         font-family: 'Outfit', sans-serif;
         background-color: #0B1020;
         color: #E0E6ED;
     }
-    
+
+    .hero-banner {
+        background: linear-gradient(135deg, rgba(11, 16, 32, 0.95) 0%, rgba(18, 24, 38, 0.90) 50%, rgba(26, 35, 58, 0.85) 100%);
+        border-radius: 20px;
+        padding: 36px;
+        border: 1px solid rgba(0, 230, 118, 0.35);
+        margin-bottom: 24px;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .metric-val {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin: 4px 0;
+    }
+
     .project-header {
         font-size: 2.5rem;
         font-weight: 800;
@@ -49,7 +67,7 @@ st.markdown("""
         letter-spacing: -0.5px;
         line-height: 1.25;
     }
-    
+
     .project-tagline {
         font-size: 1.05rem;
         font-weight: 600;
@@ -58,7 +76,7 @@ st.markdown("""
         margin-bottom: 20px;
         text-transform: uppercase;
     }
-    
+
     .glass-card {
         background: rgba(18, 24, 38, 0.75);
         border-radius: 16px;
@@ -69,28 +87,12 @@ st.markdown("""
         margin-bottom: 18px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .glass-card:hover {
         border-color: rgba(0, 229, 255, 0.35);
         box-shadow: 0 12px 40px 0 rgba(0, 229, 255, 0.15);
     }
-    
-    .hero-banner {
-        background: linear-gradient(135deg, rgba(11, 16, 32, 0.95) 0%, rgba(18, 24, 38, 0.90) 50%, rgba(26, 35, 58, 0.85) 100%);
-        border-radius: 20px;
-        padding: 36px;
-        border: 1px solid rgba(0, 230, 118, 0.35);
-        margin-bottom: 24px;
-        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
-    }
-    
-    .metric-val {
-        font-size: 2.2rem;
-        font-weight: 800;
-        line-height: 1.2;
-        margin: 4px 0;
-    }
-    
+
     .metric-lbl {
         font-size: 0.78rem;
         font-weight: 700;
@@ -98,12 +100,14 @@ st.markdown("""
         letter-spacing: 1.2px;
         color: #8A99AD;
     }
-    
+
     .badge-gi-low { background: rgba(0, 230, 118, 0.15); color: #00E676; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(0, 230, 118, 0.3); }
     .badge-gi-med { background: rgba(255, 152, 0, 0.15); color: #FF9800; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(255, 152, 0, 0.3); }
     .badge-gi-high { background: rgba(255, 23, 68, 0.15); color: #FF1744; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(255, 23, 68, 0.3); }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
 # Session State Initialization
 if 'patient_profile' not in st.session_state:
@@ -132,8 +136,11 @@ if 'patient_profile' not in st.session_state:
         "WeeklyBudget_INR": 2500
     }
 
+if 'app_mode_idx' not in st.session_state:
+    st.session_state.app_mode_idx = 0
+
 if 'active_screen' not in st.session_state:
-    st.session_state.active_screen = "Splash Screen"
+    st.session_state.active_screen = "🏠 Home"
 
 screen = st.session_state.active_screen
 
@@ -243,13 +250,27 @@ elif screen == "Personalized Analysis":
 # ==============================================================================
 else:
     p = st.session_state.patient_profile
-    bmi_val, bmi_cat, _ = nu.calculate_bmi(p["Weight"], p["Height"])
-    bmr = nu.calculate_bmr(p["Weight"], p["Height"], p["Age"], p["Gender"])
-    tdee = nu.calculate_tdee(bmr, p["ActivityLevel"])
-    cal_req = nu.calculate_calorie_requirement(tdee, p["FitnessGoal"])
-    
+    bmi_val, bmi_cat, _ = nu.calculate_bmi(
+        p["Weight"], p["Height"]
+    )
+
+    bmr = nu.calculate_bmr(
+        p["Weight"], p["Height"], p["Age"], p["Gender"]
+    )
+
+    tdee = nu.calculate_tdee(
+        bmr, p["ActivityLevel"]
+    )
+
+    cal_req = nu.calculate_calorie_requirement(
+        tdee, p["FitnessGoal"]
+    )
+
     user_input = {**p, "BMI": bmi_val}
-    predicted_cat, _, _ = re_eng.predict_diet_category(user_input)
+
+    predicted_cat, _, _ = re_engine.predict_diet_category(
+        user_input
+    )
 
     nav_options = [
         "🏠 Home",
@@ -293,6 +314,7 @@ else:
                 page_profile.load_demo_profile(demo_sel)
         else:
             st.session_state.app_mode_idx = 0
+            st.session_state.active_screen = st.session_state.get("active_screen", "🏠 Home")
 
         st.markdown("---")
 
