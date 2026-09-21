@@ -128,7 +128,7 @@ def train_and_evaluate():
         "Model": ["Random Forest"] * 4 + ["Gradient Boosting"] * 4
     })
     sns.barplot(data=metrics_df, x="Metric", y="Value", hue="Model", palette=["#00E5FF", "#00E676"])
-    plt.title("AURELIXA ML Performance Benchmarks", fontsize=14, pad=12, color="#00E676")
+    plt.title("ML Performance Benchmarks", fontsize=14, pad=12, color="#00E676")
     plt.ylim(0.85, 1.02)
     plt.tight_layout()
     plt.savefig(os.path.join(ASSETS_DIR, "model_comparison.png"), dpi=200)

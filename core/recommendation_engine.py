@@ -101,7 +101,7 @@ def generate_7_meal_recommendation(user_input, target_calories, diet_category):
                 fname = row["FoodName"]
                 allergens_val = row.get("Allergens", "")
                 
-                # AURELIXA Safety Shield Validation
+                # Safety Shield Validation
                 is_safe, reason = ss.validate_food_safety(fname, user_input, allergens_val, row.to_dict())
                 if is_safe:
                     item = {
@@ -287,7 +287,7 @@ def generate_recommendation_trace(meal_name, user_input, target_calories):
     reasoning = (
         f"Recommended because it matches your protein target, fits your calibrated calorie budget ({target_calories} kcal), "
         f"follows your selected '{pref}' dietary preference, passed all '{allergy}' allergy screening rules, and verified "
-        f"100% compliant with the AURELIXA Safety Shield validation layer."
+        f"100% compliant with the Safety Shield validation layer."
     )
 
     return trace_checks, reasoning

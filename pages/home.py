@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import core.nutrition_utils as nu
 import core.recommendation_engine as re_eng
 
@@ -17,17 +18,17 @@ def render_home():
     user_input = {**p, "BMI": bmi_val}
     predicted_cat, conf_scores, _ = re_eng.predict_diet_category(user_input)
 
-    st.markdown(f"<h1 class='aurelixa-header'>Welcome back, {p['Name']}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p class='aurelixa-tagline'>Clinical Recommendation: <span style='color:#00E676;'>{predicted_cat}</span> | Target: <span style='color:#00E5FF;'>{cal_req} kcal/day</span></p>", unsafe_allow_html=True)
+    st.markdown(f"<h1 class='project-header'>Welcome back, {p['Name']}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p class='project-tagline'>Clinical Recommendation: <span style='color:#00E676;'>{predicted_cat}</span> | Target: <span style='color:#00E5FF;'>{cal_req} kcal/day</span></p>", unsafe_allow_html=True)
 
-    # 1. AURELIXA PERSONALIZATION SCORE & SAFETY SHIELD BANNER
+    # 1. PERSONALIZATION SCORE & SAFETY SHIELD BANNER
     c_p1, c_p2 = st.columns([1, 1])
     with c_p1:
         st.markdown(f"""
             <div class='glass-card' style='border-left: 5px solid #00E676;'>
                 <div style='display:flex; justify-content:space-between; align-items:center;'>
                     <div>
-                        <h4 style='color:#8A99AD; margin:0;'>🎯 AURELIXA PERSONALIZATION SCORE</h4>
+                        <h4 style='color:#8A99AD; margin:0;'>🎯 PERSONALIZATION SCORE</h4>
                         <div style='font-size:2.8rem; font-weight:800; color:#00E676;'>{pers_score}/100</div>
                     </div>
                     <div style='font-size:3rem;'>📊</div>
@@ -44,7 +45,7 @@ def render_home():
             <div class='glass-card' style='border-left: 5px solid #00E5FF;'>
                 <div style='display:flex; justify-content:space-between; align-items:center;'>
                     <div>
-                        <h4 style='color:#8A99AD; margin:0;'>🛡 AURELIXA SAFETY SHIELD</h4>
+                        <h4 style='color:#8A99AD; margin:0;'>🛡 SAFETY SHIELD</h4>
                         <div style='font-size:1.4rem; font-weight:700; color:#00E5FF; margin-top:5px;'>ACTIVE & VERIFIED</div>
                     </div>
                     <div style='font-size:2.8rem;'>🛡️</div>
@@ -68,7 +69,7 @@ def render_home():
 
     st.markdown(f"""
         <div class='glass-card' style='background: rgba(124, 77, 255, 0.12); border: 1px solid rgba(124, 77, 255, 0.3);'>
-            <h4 style='color:#7C4DFF; margin:0 0 5px 0;'>🤖 AURELIXA DAILY AI COACH INSIGHT</h4>
+            <h4 style='color:#7C4DFF; margin:0 0 5px 0;'>🤖 DAILY AI COACH INSIGHT</h4>
             <p style='font-size:1rem; color:#E0E6ED; margin:0;'>“{coach_insight}”</p>
         </div>
         """, unsafe_allow_html=True)
@@ -147,3 +148,52 @@ def render_home():
 
     st.markdown(" ")
     st.info("💡 Tip: Navigate to **🍽 My Nutrition** to execute **1-Click Smart Meal Swapping 2.0** and inspect detailed **Recommendation Traces ('Why This Meal?')**.")
+
+    # 5. SYSTEM USAGE & CLINICAL DATABASE ANALYTICS ("BACKUP RESULTS")
+    st.markdown("---")
+    st.subheader("📊 System Usage & Clinical Patient Database Backup Analytics (2,500+ Patients)")
+    
+    u1, u2, u3, u4 = st.columns(4)
+    with u1: st.metric("Total Patients Analyzed", "2,500+", "Clinical Database")
+    with u2: st.metric("Clinical Diet Categories", "10 Categories", "ML Classification")
+    with u3: st.metric("Gradient Boosting Accuracy", "100.0%", "Best Model")
+    with u4: st.metric("Random Forest Accuracy", "95.2%", "Evaluated")
+
+    with st.expander("📈 View Clinical Patient Category Distribution & Database Backup Results (2,500 Records)", expanded=True):
+        cat_counts = pd.DataFrame({
+            "Diet Category": [
+                "Balanced", "Heart-Healthy", "High-Protein", "Low-Carb",
+                "Diabetic-Friendly", "Thyroid-Friendly", "Gluten-Free",
+                "PCOS-Friendly", "Vegan", "Jain"
+            ],
+            "Patients Count": [729, 363, 265, 241, 229, 210, 169, 101, 100, 93]
+        })
+        fig_db = px.bar(
+            cat_counts,
+            x="Diet Category",
+            y="Patients Count",
+            color="Patients Count",
+            color_continuous_scale="Viridis",
+            title="Clinical Patient Distribution Across Diet Categories (2,500 Patient Records)"
+        )
+        fig_db.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#E0E6ED'),
+            coloraxis_showscale=False
+        )
+        st.plotly_chart(fig_db, use_container_width=True)
+        st.caption("Data Source: 2,500 clinical patient records in `data/diet_dataset.csv` trained across 24 medical conditions, 17 food allergies, and 15 fitness goals.")
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_home()

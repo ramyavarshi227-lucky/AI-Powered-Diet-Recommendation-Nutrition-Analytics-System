@@ -78,3 +78,16 @@ def render_food_intelligence():
             st.markdown("### ❌ Foods to Avoid / Limit")
             avd_df = df_food[df_food["GI_Impact"].isin(["Medium", "High"])].head(25)[["FoodName", "Category", "Calories", "Carbs_g", "GI_Impact"]]
             st.dataframe(avd_df, use_container_width=True, hide_index=True)
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_food_intelligence()

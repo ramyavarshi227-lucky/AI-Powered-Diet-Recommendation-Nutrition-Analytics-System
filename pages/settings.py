@@ -37,12 +37,25 @@ def render_settings():
         st.rerun()
 
     st.markdown("---")
-    st.subheader("ℹ️ About AURELIXA Platform")
+    st.subheader("ℹ️ About AI-Powered Diet Recommendation & Nutrition Analytics System")
     st.markdown("""
-        **Application Name:** AURELIXA  
-        **Tagline:** *“Precision Nutrition. Intelligent Living.”*  
-        **Build Version:** 4.0.0 (Capstone Final Build)  
+        **Project Name:** AI-Powered Diet Recommendation and Nutrition Analytics System  
+        **Subtitle:** *“Personalized Nutrition. Intelligent Analytics. Better Decisions.”*  
+        **Build Version:** 4.0.0 (Capstone Build)  
         **Machine Learning Backbone:** Scikit-Learn Ensemble Pipeline (Gradient Boosting & Random Forest)  
-        **Dataset Scale:** 2,500 Clinical Patient Records & 220+ Food Database  
-        **Medical Safety:** Educational Decision Support System  
+        **Dataset Scale:** 2,500 Synthetic Patient Records & 300+ Verified Food Database  
+        **Medical Disclaimer:** This system provides educational nutrition estimates and analytics and is not a medical diagnosis or treatment tool. Consult a qualified healthcare professional for medical or dietary decisions.  
     """)
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_settings()

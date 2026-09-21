@@ -85,4 +85,4 @@ def validate_food_safety(food_name, user_profile, allergens_str="", row_dict=Non
             if hsf in name_lower:
                 return False, f"High saturated fat item '{hsf.title()}' is restricted for Heart Health and Cholesterol management."
 
-    return True, "Passed all 6 AURELIXA Safety Shield validation checks."
+    return True, "Passed all 6 Safety Shield validation checks."

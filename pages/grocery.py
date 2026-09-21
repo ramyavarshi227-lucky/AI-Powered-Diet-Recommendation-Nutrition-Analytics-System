@@ -45,7 +45,7 @@ def render_grocery():
     if is_over:
         st.markdown(f"""
             <div style='background: rgba(255, 152, 0, 0.15); border: 1px solid #FF9800; border-radius:12px; padding:16px; margin: 15px 0;'>
-                <h4 style='color:#FF9800; margin:0;'>⚠️ BUDGET EXCEEDED — AURELIXA COST-SAVING PROTEIN SWAPS</h4>
+                <h4 style='color:#FF9800; margin:0;'>⚠️ BUDGET EXCEEDED — COST-SAVING PROTEIN SWAPS</h4>
                 <p style='color:#E0E6ED; font-size:0.9rem; margin:5px 0;'>Your estimated 7-day grocery cost exceeds your target budget by <b>₹{savings:,}</b>. Below are lower-cost protein alternatives with equal nutritional value:</p>
             </div>
             """, unsafe_allow_html=True)
@@ -74,8 +74,8 @@ def render_grocery():
     for cat_name, items in categories.items():
         if items:
             with st.expander(f"🛒 {cat_name} ({len(items)} items — ₹{cat_costs.get(cat_name, 0):,})", expanded=True):
-                for item in items:
-                    item_key = f"{cat_name}_{item['name']}"
+                for idx, item in enumerate(items):
+                    item_key = f"groc_{cat_name}_{idx}_{item['name']}"
                     is_checked = st.checkbox(
                         f"**{item['name']}** — 7-Day Total Qty: `{item['qty']}` | Est Cost: `₹{item['price']}`",
                         value=(item_key in st.session_state.grocery_checked_items),
@@ -87,6 +87,19 @@ def render_grocery():
                         st.session_state.grocery_checked_items.discard(item_key)
 
     st.markdown("---")
-    st.subheader("💡 AURELIXA Budget Optimization Tips")
+    st.subheader("💡 Budget Optimization Tips")
     for sug in opt_sugs:
         st.markdown(f"• {sug}")
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_grocery()

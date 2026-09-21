@@ -10,7 +10,7 @@ def render_health_analytics():
     p = st.session_state.patient_profile
     overall_score, components = nu.get_health_score_breakdown(p)
 
-    st.subheader(f"Overall Wellness Score: <span style='color:#00E676;'>{overall_score}/100</span>", unsafe_allow_html=True)
+    st.markdown(f"### Overall Wellness Score: <span style='color:#00E676;'>{overall_score}/100</span>", unsafe_allow_html=True)
 
     # "WHY IS MY SCORE XX?" TRANSPARENCY EXPANDER
     with st.expander(f"🔍 WHY IS MY SCORE {overall_score}? (Component Breakdown)", expanded=True):
@@ -43,3 +43,16 @@ def render_health_analytics():
     st.plotly_chart(fig_t, use_container_width=True)
 
     st.info(f"💡 Projecting **{weekly_fat_change_kg:+.2f} kg** estimated fat change per week based on a daily energy delta of {tdee - cal_req} kcal.")
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_health_analytics()

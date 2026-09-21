@@ -1,74 +1,9 @@
 import streamlit as st
 import core.nutrition_utils as nu
 
-def load_demo_profile(profile_key):
-    profiles = {
-        "Profile A (Weight Loss + South Indian)": {
-            "Name": "Priya Sharma", "Age": 29, "Gender": "Female", "Height": 162, "Weight": 72.0, "BodyFat": 26.0, "Waist": 80.0,
-            "ActivityLevel": "Moderately Active", "Occupation": "Office Worker", "DailySteps": 8500, "ExerciseFreq": "3-4 times / week",
-            "WorkoutType": "Cardio & Pilates", "WaterIntake_L": 3.0, "Sleep_Hours": 7.5, "StressLevel": "Moderate",
-            "SmokingStatus": "Non-Smoker", "AlcoholConsumption": "None", "FitnessGoal": "Weight Loss", "MedicalCondition": "None",
-            "FoodAllergy": "Nuts", "DietaryPreference": "South Indian", "WeeklyBudget_INR": 2500
-        },
-        "Profile B (Muscle Gain + Vegetarian)": {
-            "Name": "Rohan Patel", "Age": 24, "Gender": "Male", "Height": 180, "Weight": 70.0, "BodyFat": 14.0, "Waist": 78.0,
-            "ActivityLevel": "Athlete", "Occupation": "Student", "DailySteps": 14000, "ExerciseFreq": "5-6 times / week",
-            "WorkoutType": "Hypertrophy Strength", "WaterIntake_L": 4.0, "Sleep_Hours": 8.0, "StressLevel": "Low",
-            "SmokingStatus": "Non-Smoker", "AlcoholConsumption": "Occasional", "FitnessGoal": "Muscle Gain", "MedicalCondition": "None",
-            "FoodAllergy": "None", "DietaryPreference": "Vegetarian", "WeeklyBudget_INR": 3500
-        },
-        "Profile C (Diabetes Control + Vegetarian)": {
-            "Name": "Rajesh Kumar", "Age": 52, "Gender": "Male", "Height": 172, "Weight": 84.0, "BodyFat": 28.0, "Waist": 94.0,
-            "ActivityLevel": "Lightly Active", "Occupation": "Retired", "DailySteps": 6000, "ExerciseFreq": "1-2 times / week",
-            "WorkoutType": "Brisk Walking", "WaterIntake_L": 2.5, "Sleep_Hours": 7.0, "StressLevel": "Moderate",
-            "SmokingStatus": "Non-Smoker", "AlcoholConsumption": "None", "FitnessGoal": "Diabetic Control", "MedicalCondition": "Diabetes Type 2",
-            "FoodAllergy": "Dairy", "DietaryPreference": "Vegetarian", "WeeklyBudget_INR": 3000
-        },
-        "Profile D (Heart Health + Non-Veg)": {
-            "Name": "Sunita Verma", "Age": 48, "Gender": "Female", "Height": 165, "Weight": 78.0, "BodyFat": 30.0, "Waist": 88.0,
-            "ActivityLevel": "Moderately Active", "Occupation": "Teacher", "DailySteps": 7500, "ExerciseFreq": "3-4 times / week",
-            "WorkoutType": "Yoga & Walking", "WaterIntake_L": 3.0, "Sleep_Hours": 7.0, "StressLevel": "High",
-            "SmokingStatus": "Non-Smoker", "AlcoholConsumption": "None", "FitnessGoal": "Heart Health", "MedicalCondition": "Hypertension",
-            "FoodAllergy": "Shellfish", "DietaryPreference": "Non-Vegetarian", "WeeklyBudget_INR": 4000
-        },
-        "Profile E (Budget Student + Vegan)": {
-            "Name": "Aarav Mehta", "Age": 21, "Gender": "Male", "Height": 175, "Weight": 65.0, "BodyFat": 16.0, "Waist": 76.0,
-            "ActivityLevel": "Very Active", "Occupation": "Student", "DailySteps": 12000, "ExerciseFreq": "4-5 times / week",
-            "WorkoutType": "Calisthenics", "WaterIntake_L": 3.5, "Sleep_Hours": 6.5, "StressLevel": "High",
-            "SmokingStatus": "Non-Smoker", "AlcoholConsumption": "Occasional", "FitnessGoal": "Maintenance", "MedicalCondition": "None",
-            "FoodAllergy": "None", "DietaryPreference": "Vegan", "WeeklyBudget_INR": 1500
-        }
-    }
-    if profile_key in profiles:
-        st.session_state.patient_profile = profiles[profile_key].copy()
-        if 'current_meals_dict' in st.session_state:
-            del st.session_state['current_meals_dict']
-        st.session_state.active_screen = "🏠 Home"
-        st.success(f"🎯 Loaded Demo Profile: {profile_key}!")
-        st.rerun()
-
 def render_profile_wizard():
-    st.markdown("<h1 class='aurelixa-header'>Clinical Intake & Bio-Profiling Wizard</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='aurelixa-tagline'>Complete the 6-step intake wizard or choose a Judge Demo Profile.</p>", unsafe_allow_html=True)
-
-    # 🎯 JUDGE DEMO MODE SELECTOR
-    with st.expander("🎯 JUDGE DEMO MODE — Pre-Populate 5-Minute Competition Profiles", expanded=True):
-        st.markdown("**Select a pre-configured patient profile for instant 5-minute competition presentation:**")
-        d_cols = st.columns(3)
-        with d_cols[0]:
-            if st.button("👩 Profile A: Weight Loss (South Indian)", use_container_width=True):
-                load_demo_profile("Profile A (Weight Loss + South Indian)")
-            if st.button("👨 Profile B: Muscle Gain (Vegetarian)", use_container_width=True):
-                load_demo_profile("Profile B (Muscle Gain + Vegetarian)")
-        with d_cols[1]:
-            if st.button("👴 Profile C: Diabetes Control (Vegetarian)", use_container_width=True):
-                load_demo_profile("Profile C (Diabetes Control + Vegetarian)")
-            if st.button("👩‍🏫 Profile D: Heart Health (Hypertension)", use_container_width=True):
-                load_demo_profile("Profile D (Heart Health + Non-Veg)")
-        with d_cols[2]:
-            if st.button("🎓 Profile E: Budget Student (Vegan)", use_container_width=True):
-                load_demo_profile("Profile E (Budget Student + Vegan)")
-
+    st.markdown("<h1 class='project-header'>Clinical Intake & Bio-Profiling Wizard</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='project-tagline'>Enter your personal biometrics, health goals, and medical preferences for AI-powered dietary recommendations.</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     if 'profile_wizard_step' not in st.session_state:
@@ -176,3 +111,16 @@ def render_profile_wizard():
                     del st.session_state['current_meals_dict']
                 st.session_state.active_screen = "Personalized Analysis"
                 st.rerun()
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_profile_wizard()

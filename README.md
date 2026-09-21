@@ -1,20 +1,22 @@
-# AURELIXA — Precision Nutrition. Intelligent Living. (Competition Final Build)
+# AI-Powered Diet Recommendation and Nutrition Analytics System
 
-An advanced, competition-grade AI Healthcare and Clinical Nutrition Application designed for personalized dietary planning, healthcare diagnostics, lifestyle tracking, and multi-screen health monitoring. Built for a 3rd-year Computer Science and Engineering (Data Science) capstone defense.
+**Personalized Nutrition. Intelligent Analytics. Better Decisions.**
+
+An advanced AI Healthcare and Clinical Nutrition Application designed for personalized dietary planning, healthcare diagnostics, lifestyle tracking, and multi-screen health monitoring. Built for a 3rd-year Computer Science and Engineering (Data Science) capstone defense.
 
 ---
 
 ## 📖 Abstract
-Traditional dietary recommendations rely on static calorie guidelines that ignore individual medical histories, metabolic parameters, food allergies, occupations, and lifestyle habits. **AURELIXA** (*"Precision Nutrition. Intelligent Living."*) presents a clinical-grade **Multi-Screen AI Healthcare & Nutrition Intelligence Application**. Using a custom dataset of **2,500 synthetic patient records** built according to clinical guidelines, we train two ensemble classifiers: **Random Forest** and **Gradient Boosting**. The model classifies patients into optimal clinical diet categories (*Diabetic-Friendly, Heart-Healthy, Low-Carb, Keto, High-Protein, PCOS-Friendly, Thyroid-Friendly, Vegan-Balanced, Jain-Balanced, Gluten-Free-Balanced*) based on age, gender, BMI, 5 activity levels, 7 occupations, 24 medical conditions, 15 fitness goals, 17 food allergies, 12 dietary preferences, and lifestyle indicators.
+Traditional dietary recommendations rely on static calorie guidelines that ignore individual medical histories, metabolic parameters, food allergies, occupations, and lifestyle habits. The **AI-Powered Diet Recommendation and Nutrition Analytics System** presents a clinical-grade **Multi-Screen AI Healthcare & Nutrition Intelligence Application**. Using a custom dataset of **2,500 synthetic patient records** built according to clinical guidelines, we train two ensemble classifiers: **Random Forest** and **Gradient Boosting**. The model classifies patients into optimal clinical diet categories (*Diabetic-Friendly, Heart-Healthy, Low-Carb, Keto, High-Protein, PCOS-Friendly, Thyroid-Friendly, Vegan-Balanced, Jain-Balanced, Gluten-Free-Balanced*) based on age, gender, BMI, 5 activity levels, 7 occupations, 24 medical conditions, 15 fitness goals, 17 food allergies, 12 dietary preferences, and lifestyle indicators.
 
-The application features a **300+ item food database (`data/food_database.csv`)** complete with regional origins, cooking notes, healthy substitutes, quantities, units, and estimated prices in **Indian Rupees (₹)**. It computes Basal Metabolic Rate (BMR) and Total Daily Energy Expenditure (TDEE), calculates a **Personalization Score (0–100)**, executes an **AURELIXA Safety Shield 6-Point Validation Layer**, scales daily 7-meal plans with 1-click **Smart Meal Swapping 2.0 (Best Match)**, presents **Recommendation Traces ("Why This Meal?")**, estimates a **Budget-Aware Categorized Weekly Grocery Budget in ₹**, evaluates an **8-Nutrient Risk Analyzer**, and features a **What-If Simulator**, **Adaptive AI Weekly Insights**, 3 ReportLab PDF export streams, CSV log exports, **5-Minute Judge Demo Mode**, and a 16-screen progressive glassmorphism Streamlit UI.
+The application features a **300+ item food database (`data/food_database.csv`)** complete with regional origins, cooking notes, healthy substitutes, quantities, units, and estimated prices in **Indian Rupees (₹)**. It computes Basal Metabolic Rate (BMR) and Total Daily Energy Expenditure (TDEE), calculates a **Personalization Score (0–100)**, executes a **6-Point Safety Shield Validation Layer**, scales daily 7-meal plans with 1-click **Smart Meal Swapping 2.0 (Best Match)**, presents **Recommendation Traces ("Why This Meal?")**, estimates a **Budget-Aware Categorized Weekly Grocery Budget in ₹**, evaluates an **8-Nutrient Risk Analyzer**, and features a **What-If Simulator**, **Adaptive AI Weekly Insights**, 3 ReportLab PDF export streams, CSV log exports, **5-Minute Judge Demo Mode**, and a 16-screen progressive glassmorphism Streamlit UI.
 
 ---
 
-## 🏆 The Five Pillars of AURELIXA
+## 🏆 The Five Core Pillars
 
 1. **PERSONALIZATION**: **Personalization Score (0–100)** with 6-factor criteria breakdown & dynamic weight calculations.
-2. **SAFETY**: **AURELIXA Safety Shield** validation layer (hard-blocking allergen/preference/medical violations across daily meals, weekly matrices, swaps, grocery lists, and PDF reports).
+2. **SAFETY**: **Safety Shield** validation layer (hard-blocking allergen/preference/medical violations across daily meals, weekly matrices, swaps, grocery lists, and PDF reports).
 3. **INTELLIGENCE**: **Smart Meal Swap 2.0** (Top 3 candidates with "Best Match" tagging), **Recommendation Trace** (*"Why This Meal?"*), **Adaptive AI Weekly Insights**, **What-If Simulator**, and **Confidence-Aware AI**.
 4. **AFFORDABILITY**: **Budget-Aware AI** (Daily/Weekly budget caps, cost optimization, protein swaps for cost saving) & **Aggregated Ingredient Grocery Engine** with interactive checklist completion % (`72%`).
 5. **CULTURAL EXCELLENCE**: Expanded **300+ Indian Food Database** (South Indian, North Indian, Regional, Jain, Vegan) & **Smart Culturally Relevant Substitutions**.
@@ -59,7 +61,7 @@ The application features a **300+ item food database (`data/food_database.csv`)*
 
 ## 💬 25 Viva Questions with Answers (Data Science / CSE Capstone)
 
-#### 1. What is the core objective of the AURELIXA platform?
+#### 1. What is the core objective of this project?
 To provide a multi-screen clinical decision support application using machine learning classifiers to predict optimal diet categories while calculating metabolic energy targets (BMR/TDEE), computing a Personalization Score (0-100), running a 6-point Safety Shield validation layer, scaling 7 daily meals with 1-click Smart Swap 2.0, presenting Recommendation Traces ("Why This Meal?"), estimating weekly grocery budgets in Indian Rupees (₹), and evaluating a What-If Simulator and 8-nutrient risk analyzer.
 
 #### 2. What machine learning algorithms were trained and compared?
@@ -80,7 +82,7 @@ By multiplying BMR with specific activity multipliers: Sedentary (1.20), Lightly
 #### 6. What columns exist in `data/food_database.csv`?
 `FoodID, FoodName, Category, Region, Calories, Protein_g, Carbs_g, Fat_g, Fiber_g, GlycemicIndex, GI_Impact, IsVegetarian, IsNonVeg, IsVegan, IsEggetarian, IsJain, IsSouthIndian, IsNorthIndian, IsMediterranean, Allergens, CookingNotes, HealthySubstitutes, EstQuantity, EstUnit, EstPriceINR`.
 
-#### 7. How does the AURELIXA Safety Shield work?
+#### 7. How does the Safety Shield work?
 Every food item undergoes 6 hard validation checks: 1. ALLERGY CHECK, 2. DIETARY PREFERENCE CHECK, 3. MEDICAL RULE CHECK, 4. CALORIE CHECK, 5. MACRO CHECK, 6. FOOD RESTRICTION CHECK. Violations hard-block the item from being displayed.
 
 #### 8. How does Smart Meal Swap 2.0 select replacements?
@@ -102,7 +104,7 @@ It aggregates ingredients across all 7 daily meals, calculates 7-day total quant
 A 1-click selector in the sidebar/intake with 5 pre-configured judge profiles (*Weight Loss + South Indian*, *Muscle Gain + Vegetarian*, *Diabetes Control*, *Heart Health*, *Budget Student*) enabling complete 5-minute competition presentations.
 
 #### 14. What PDF reports can be exported?
-1. AURELIXA Clinical Diet Report PDF (with Personalization & Safety Badges)
+1. Clinical Diet Report PDF (with Personalization & Safety Badges)
 2. 7-Day Weekly Meal Matrix PDF
 3. Categorized Grocery Checklist PDF (with ₹ budget)
 
@@ -127,8 +129,8 @@ Through the "Why is my score XX?" expander rendering individual scores for Nutri
 #### 21. What is Adaptive AI Weekly Insights?
 An adaptive engine analyzing weekly adherence history to generate wellness progress summaries (e.g. *"Your protein adherence improved this week"*).
 
-#### 22. What is the medical safety policy of AURELIXA?
-AURELIXA is an educational decision support system. It explicitly presents disclaimers stating that recommendations are educational nutrition estimates and not medical diagnoses, urging users to consult qualified healthcare professionals for medical treatment.
+#### 22. What is the medical safety policy of the system?
+This system provides educational nutrition estimates and analytics and is not a medical diagnosis or treatment tool. Consult a qualified healthcare professional for medical or dietary decisions.
 
 #### 23. How does Confidence-Aware AI function?
 It displays the model's actual prediction probability ($max(predict\_proba)$) and issues a warning if model confidence falls below 60%.

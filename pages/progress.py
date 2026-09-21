@@ -94,4 +94,17 @@ def render_progress():
     st.dataframe(df_h.sort_values(by="Date", ascending=False), use_container_width=True, hide_index=True)
 
     csv_data = df_h.to_csv(index=False).encode('utf-8')
-    st.download_button("💾 Export Progress Log (CSV)", data=csv_data, file_name="aurelixa_progress_log.csv", mime="text/csv")
+    st.download_button("💾 Export Progress Log (CSV)", data=csv_data, file_name="diet_system_progress_log.csv", mime="text/csv")
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_progress()

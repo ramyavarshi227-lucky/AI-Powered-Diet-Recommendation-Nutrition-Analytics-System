@@ -13,7 +13,7 @@ def get_explainable_ai_rationale_10(user_input, predicted_cat, health_score, tar
     stress = user_input.get("StressLevel", "Moderate")
     bmi = user_input.get("BMI", 24.2)
     
-    rationale = f"🧠 AURELIXA 10-FACTOR EXPLAINABLE AI (XAI) ATTRIBUTION RATIONALE:\n\n"
+    rationale = f"🧠 10-FACTOR EXPLAINABLE AI (XAI) ATTRIBUTION RATIONALE:\n\n"
     rationale += f"1. Primary Clinical Factor ({med}): Model classified category '{predicted_cat}' to address metabolic management rules.\n"
     rationale += f"2. Body Mass Index ({bmi}): Weight management factor calibrated for optimal body composition.\n"
     rationale += f"3. Fitness Goal ({goal}): Caloric target set to {target_calories} kcal/day.\n"

@@ -19,7 +19,7 @@ def render_nutrition():
 
     # 🛡 SAFETY SHIELD DEMO SCENARIO FOR JUDGES
     with st.expander("🛡 DEMO SCENARIO FOR JUDGES — Test Safety Shield Violation Live", expanded=False):
-        st.markdown("Select an allergy and attempt a meal swap to demonstrate how the AURELIXA Safety Shield blocks restricted foods:")
+        st.markdown("Select an allergy and attempt a meal swap to demonstrate how the Safety Shield blocks restricted foods:")
         d_allergy = st.selectbox("Test Demo Allergy", ["Nuts", "Dairy", "Gluten", "Seafood", "Eggs"], index=0)
         d_food = st.text_input("Test Prohibited Food Item", "Raw Almonds (23 nuts)" if d_allergy == "Nuts" else "Fresh Paneer")
         
@@ -29,7 +29,7 @@ def render_nutrition():
             if not is_safe:
                 st.markdown(f"""
                     <div style='background: rgba(255, 23, 68, 0.15); border: 2px solid #FF1744; border-radius:12px; padding:16px; margin-top:10px;'>
-                        <h4 style='color:#FF1744; margin:0;'>🛡 AURELIXA SAFETY SHIELD ACTIVATED — MEAL BLOCKED</h4>
+                        <h4 style='color:#FF1744; margin:0;'>🛡 SAFETY SHIELD ACTIVATED — MEAL BLOCKED</h4>
                         <p style='color:#E0E6ED; font-size:0.95rem; margin:5px 0 0 0;'><b>Reason:</b> “{reason}”</p>
                         <small style='color:#8A99AD;'>Restricted food was hard-blocked from being displayed or recommended.</small>
                     </div>
@@ -103,3 +103,16 @@ def render_nutrition():
                         st.warning("No alternative foods found passing all 6 Safety Shield restrictions.")
 
         st.markdown(" ")
+
+
+if __name__ == '__main__':
+    if 'patient_profile' not in st.session_state:
+        st.session_state.patient_profile = {
+            'Name': 'Priya Sharma', 'Age': 29, 'Gender': 'Female', 'Height': 162, 'Weight': 72.0,
+            'BodyFat': 26.0, 'Waist': 80.0, 'ActivityLevel': 'Moderately Active', 'Occupation': 'Office Worker',
+            'DailySteps': 8500, 'ExerciseFreq': '3-4 times / week', 'WorkoutType': 'Cardio & Pilates',
+            'WaterIntake_L': 3.0, 'Sleep_Hours': 7.5, 'StressLevel': 'Moderate', 'SmokingStatus': 'Non-Smoker',
+            'AlcoholConsumption': 'None', 'FitnessGoal': 'Weight Loss', 'MedicalCondition': 'None',
+            'FoodAllergy': 'Nuts', 'DietaryPreference': 'South Indian', 'WeeklyBudget_INR': 2500
+        }
+    render_nutrition()

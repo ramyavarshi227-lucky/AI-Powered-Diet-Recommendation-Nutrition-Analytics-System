@@ -22,13 +22,13 @@ import pages.settings as page_settings
 
 # Streamlit Page Config
 st.set_page_config(
-    page_title="AURELIXA — Precision Nutrition. Intelligent Living.",
-    page_icon="🧬",
+    page_title="AI-Powered Diet Recommendation and Nutrition Analytics System",
+    page_icon="🥗",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Dark Glassmorphism AURELIXA Styling
+# Dark Glassmorphism Project Styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -39,17 +39,18 @@ st.markdown("""
         color: #E0E6ED;
     }
     
-    .aurelixa-header {
-        font-size: 2.8rem;
+    .project-header {
+        font-size: 2.5rem;
         font-weight: 800;
         background: linear-gradient(135deg, #00E676 0%, #00E5FF 40%, #7C4DFF 70%, #D500F9 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
         letter-spacing: -0.5px;
+        line-height: 1.25;
     }
     
-    .aurelixa-tagline {
+    .project-tagline {
         font-size: 1.05rem;
         font-weight: 600;
         color: #00E5FF;
@@ -75,13 +76,12 @@ st.markdown("""
     }
     
     .hero-banner {
-        background: linear-gradient(135deg, rgba(11, 16, 32, 0.92) 0%, rgba(18, 24, 38, 0.85) 100%),
-                    url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1350&q=80');
-        background-size: cover;
+        background: linear-gradient(135deg, rgba(11, 16, 32, 0.95) 0%, rgba(18, 24, 38, 0.90) 50%, rgba(26, 35, 58, 0.85) 100%);
         border-radius: 20px;
         padding: 36px;
         border: 1px solid rgba(0, 230, 118, 0.35);
         margin-bottom: 24px;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
     }
     
     .metric-val {
@@ -143,11 +143,11 @@ screen = st.session_state.active_screen
 if screen == "Splash Screen":
     st.markdown("""
         <div class='hero-banner' style='text-align:center; padding: 60px 20px;'>
-            <div style='font-size:4rem; margin-bottom:10px;'>🧬</div>
-            <h1 class='aurelixa-header' style='font-size:3.5rem;'>AURELIXA</h1>
-            <p class='aurelixa-tagline' style='font-size:1.2rem;'>Precision Nutrition. Intelligent Living.</p>
-            <p style='color:#E0E6ED; font-size:1.15rem; max-width:680px; margin: 0 auto 30px auto;'>
-                Competition-Grade AI Healthcare Nutrition Platform combining Personalization Score (0-100), 6-point Safety Shield validation, 300+ Indian food database, Smart Meal Swapping 2.0, and What-If Simulation.
+            <div style='font-size:4rem; margin-bottom:10px;'>🥗</div>
+            <h1 class='project-header' style='font-size:3rem;'>AI-Powered Diet Recommendation<br>and Nutrition Analytics System</h1>
+            <p class='project-tagline' style='font-size:1.1rem;'>Personalized Nutrition. Intelligent Analytics. Better Decisions.</p>
+            <p style='color:#E0E6ED; font-size:1.05rem; max-width:720px; margin: 0 auto 30px auto;'>
+                Clinical-grade decision support platform combining Random Forest and Gradient Boosting machine learning models, 6-point Safety Shield validation, 300+ Indian food database, Smart Meal Swapping 2.0, and What-If Simulation.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -163,8 +163,8 @@ if screen == "Splash Screen":
 # SCREEN 2: WELCOME / ONBOARDING
 # ==============================================================================
 elif screen == "Welcome / Onboarding":
-    st.markdown("<h1 class='aurelixa-header'>Welcome to AURELIXA</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='aurelixa-tagline'>Discover Next-Generation Clinical Nutrition Intelligence</p>", unsafe_allow_html=True)
+    st.markdown("<h1 class='project-header'>AI-Powered Diet Recommendation & Nutrition Analytics System</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='project-tagline'>Personalized Nutrition. Intelligent Analytics. Better Decisions.</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     o1, o2, o3, o4 = st.columns(4)
@@ -214,14 +214,14 @@ elif screen == "Clinical Profile":
 # SCREEN 4: PERSONALIZED ANALYSIS LOADING
 # ==============================================================================
 elif screen == "Personalized Analysis":
-    st.markdown("<h1 class='aurelixa-header' style='text-align:center;'>AURELIXA Intelligence Engine</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='aurelixa-tagline' style='text-align:center;'>Running Clinical Bio-Metabolic Calculations...</p>", unsafe_allow_html=True)
+    st.markdown("<h1 class='project-header' style='text-align:center;'>AI Nutrition Analytics Engine</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='project-tagline' style='text-align:center;'>Running Clinical Bio-Metabolic Calculations...</p>", unsafe_allow_html=True)
     
     st.markdown("""
         <div class='glass-card' style='max-width:650px; margin: 0 auto; font-size:1.05rem; line-height:2;'>
             <p style='color:#00E676;'>✓ Calculating BMR & TDEE metabolic baselines</p>
             <p style='color:#00E676;'>✓ Calculating Personalization Score (0-100)</p>
-            <p style='color:#00E676;'>✓ Executing AURELIXA 6-Point Safety Shield Validation</p>
+            <p style='color:#00E676;'>✓ Executing 6-Point Safety Shield Validation</p>
             <p style='color:#00E676;'>✓ Screening 17 clinical food allergen exclusions</p>
             <p style='color:#00E676;'>✓ Querying 300+ Indian & Global Food Database</p>
             <p style='color:#00E676;'>✓ Executing Gradient Boosting AI recommendation model</p>
@@ -253,6 +253,7 @@ else:
 
     nav_options = [
         "🏠 Home",
+        "👤 Edit Profile / Intake",
         "🍽 My Nutrition",
         "📅 Weekly Plan",
         "🛒 Grocery Intelligence",
@@ -267,22 +268,9 @@ else:
     ]
 
     with st.sidebar:
-        st.markdown("<h2 style='color:#00E676; margin-bottom:0;'>🧬 AURELIXA</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#00E5FF; font-size:0.75rem; font-weight:700; letter-spacing:1px;'>PRECISION NUTRITION. INTELLIGENT LIVING.</p>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color:#00E676; margin-bottom:0;'>🥗 AI-Powered Diet System</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#00E5FF; font-size:0.75rem; font-weight:700; letter-spacing:1px;'>PERSONALIZED NUTRITION & ANALYTICS</p>", unsafe_allow_html=True)
         st.markdown("---")
-
-        # 🎯 SIDEBAR JUDGE DEMO SELECTOR
-        with st.expander("🎯 JUDGE DEMO MODE", expanded=False):
-            demo_sel = st.selectbox("Load Demo Profile", [
-                "Select Profile...",
-                "Profile A (Weight Loss + South Indian)",
-                "Profile B (Muscle Gain + Vegetarian)",
-                "Profile C (Diabetes Control + Vegetarian)",
-                "Profile D (Heart Health + Non-Veg)",
-                "Profile E (Budget Student + Vegan)"
-            ])
-            if demo_sel != "Select Profile...":
-                page_profile.load_demo_profile(demo_sel)
 
         curr_screen = st.session_state.get("active_screen", "🏠 Home")
         default_idx = nav_options.index(curr_screen) if curr_screen in nav_options else 0
@@ -306,6 +294,8 @@ else:
     # Render Active Selected Screen
     if nav_selection == "🏠 Home":
         page_home.render_home()
+    elif nav_selection == "👤 Edit Profile / Intake":
+        page_profile.render_profile_wizard()
     elif nav_selection == "🍽 My Nutrition":
         page_nutrition.render_nutrition()
     elif nav_selection == "📅 Weekly Plan":
