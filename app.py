@@ -272,6 +272,30 @@ else:
         st.markdown("<p style='color:#00E5FF; font-size:0.75rem; font-weight:700; letter-spacing:1px;'>PERSONALIZED NUTRITION & ANALYTICS</p>", unsafe_allow_html=True)
         st.markdown("---")
 
+        # 👤 MODE SELECTOR: NORMAL MODE vs JUDGE DEMO MODE
+        app_mode = st.radio(
+            "Select Operating Mode",
+            ["👤 Normal Mode (Custom Profile)", "🎯 Judge Demo Mode (Preset Profiles)"],
+            index=st.session_state.get("app_mode_idx", 0)
+        )
+
+        if "Judge Demo Mode" in app_mode:
+            st.session_state.app_mode_idx = 1
+            demo_sel = st.selectbox("Load Judge Demo Profile", [
+                "Select Profile...",
+                "Profile A (Weight Loss + South Indian)",
+                "Profile B (Muscle Gain + Vegetarian)",
+                "Profile C (Diabetes Control + Vegetarian)",
+                "Profile D (Heart Health + Non-Veg)",
+                "Profile E (Budget Student + Vegan)"
+            ])
+            if demo_sel != "Select Profile...":
+                page_profile.load_demo_profile(demo_sel)
+        else:
+            st.session_state.app_mode_idx = 0
+
+        st.markdown("---")
+
         curr_screen = st.session_state.get("active_screen", "🏠 Home")
         default_idx = nav_options.index(curr_screen) if curr_screen in nav_options else 0
 
