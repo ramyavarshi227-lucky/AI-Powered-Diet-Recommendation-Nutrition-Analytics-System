@@ -140,7 +140,7 @@ if 'app_mode_idx' not in st.session_state:
     st.session_state.app_mode_idx = 0
 
 if 'active_screen' not in st.session_state:
-    st.session_state.active_screen = "🏠 Home"
+    st.session_state.active_screen = "Splash Screen"
 
 screen = st.session_state.active_screen
 
